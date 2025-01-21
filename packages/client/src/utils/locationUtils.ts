@@ -92,7 +92,7 @@ export function generateLocationName(
   let name = getLocalizedLocationName(intl, location)
   location.jurisdictionType &&
     (name += ` ${
-      intl.formatMessage(locationMessages[location.jurisdictionType]) || ''
+      intl.formatMessage(locationMessages(location.jurisdictionType)) || ''
     }`.trimEnd())
   return name
 }
@@ -226,10 +226,8 @@ export function getLocalizedLocationName(intl: IntlShape, location: ILocation) {
 type LocationHierarchy = {
   state?: string
   district?: string
-  locationLevel3?: string
-  locationLevel4?: string
-  locationLevel5?: string
   country?: string
+  [key: `locationLevel${number}`]: string | undefined
 }
 
 const camelCasedJurisdictionType = (
@@ -260,29 +258,24 @@ export function generateFullAddress(
   address: Address,
   offlineData: IOfflineData
 ): string[] {
+  const locationLevels = []
+
+  if (!address?.line) {
+    return []
+  }
+  for (let i = address.line.length - 1; i >= 3; i--) {
+    const fhirIndex = i + 7
+    locationLevels.push(
+      address.line[fhirIndex] &&
+        offlineData.locations[address.line[fhirIndex]]?.name
+    )
+  }
   const district =
     address.district && offlineData.locations[address.district].name
 
   const state = address.state && offlineData.locations[address.state].name
 
-  const eventLocationLevel3 =
-    address?.line?.[10] && offlineData.locations[address.line[10]]?.name
-
-  const eventLocationLevel4 =
-    address?.line?.[11] && offlineData.locations[address.line[11]]?.name
-
-  const eventLocationLevel5 =
-    address?.line?.[12] && offlineData.locations[address.line[12]]?.name
-
-  const eventLocationLevel6 =
-    address?.line?.[13] && offlineData.locations[address.line[13]]?.name
-
-  return [
-    eventLocationLevel6,
-    eventLocationLevel5,
-    eventLocationLevel4,
-    eventLocationLevel3,
-    district,
-    state
-  ].filter((maybeLocation): maybeLocation is string => Boolean(maybeLocation))
+  return [...locationLevels, district, state].filter(
+    (maybeLocation): maybeLocation is string => Boolean(maybeLocation)
+  )
 }

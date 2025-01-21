@@ -67,12 +67,7 @@ export interface ILocation {
   partOf: string
 }
 
-type JurisdictionType =
-  | 'STATE'
-  | 'DISTRICT'
-  | 'LOCATION_LEVEL_3'
-  | 'LOCATION_LEVEL_4'
-  | 'LOCATION_LEVEL_5'
+type JurisdictionType = 'STATE' | 'DISTRICT' | `LOCATION_LEVEL_${number}`
 
 export interface AdminStructure extends ILocation {
   type: 'ADMIN_STRUCTURE'

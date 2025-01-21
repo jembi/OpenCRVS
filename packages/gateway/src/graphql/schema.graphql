@@ -522,6 +522,7 @@ input AdvancedSearchParametersInput {
   declarationJurisdictionId: String
   eventLocationId: String
   eventCountry: String
+  eventJurisdictionId: String
   eventLocationLevel1: String
   eventLocationLevel2: String
   eventLocationLevel3: String
@@ -1445,6 +1446,7 @@ type AdvancedSeachParameters {
   declarationJurisdictionId: String
   eventLocationId: String
   eventCountry: String
+  eventJurisdictionId: String
   eventLocationLevel1: String
   eventLocationLevel2: String
   eventLocationLevel3: String

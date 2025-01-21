@@ -75,10 +75,7 @@ const REQUIRED_PRIMARY_ADDRESS_FIELDS = ['countryPrimary', 'statePrimary']
 
 const OPTIONAL_EVENT_ADDRESS_FIELDS = [
   'district',
-  'locationLevel3',
-  'locationLevel4',
-  'locationLevel5',
-  'locationLevel6',
+  'locationLevel{x}',
   'ruralOrUrban',
   'city',
   'addressLine3UrbanOption',
@@ -101,10 +98,7 @@ const OPTIONAL_EVENT_ADDRESS_FIELDS = [
 
 const OPTIONAL_PRIMARY_ADDRESS_FIELDS = [
   'districtPrimary',
-  'locationLevel3Primary',
-  'locationLevel4Primary',
-  'locationLevel5Primary',
-  'locationLevel6Primary',
+  'locationLevel{x}Primary',
   'ruralOrUrbanPrimary',
   'cityPrimary',
   'addressLine3UrbanOptionPrimary',
@@ -338,6 +332,21 @@ const OPTIONAL_FIELDS_IN_SECTION: Record<string, string[] | undefined> = {
   ]
 }
 
+const matchField = (fields: string[], nonCustomField: string) => {
+  if (fields.includes(nonCustomField)) {
+    return true
+  }
+  const match = nonCustomField.match(/locationLevel(\d+)/)
+  if (match) {
+    return fields.some(
+      (field) =>
+        field.includes('{x}') &&
+        field.replace('{x}', match[1]) === nonCustomField
+    )
+  }
+  return false
+}
+
 const form = z.object({
   sections: z
     .array(
@@ -424,7 +433,8 @@ const form = z.object({
             return (
               nonCustomfieldsInSection.filter(
                 (nonCustomField) =>
-                  !(OPTIONAL_FIELDS_IN_SECTION[sec.id] ?? []).includes(
+                  !matchField(
+                    OPTIONAL_FIELDS_IN_SECTION[sec.id] ?? [],
                     nonCustomField
                   )
               ).length === 0
@@ -443,7 +453,8 @@ const form = z.object({
             )
             const unrecognizedFields = nonCustomfieldsInSection.filter(
               (nonCustomField) =>
-                !(OPTIONAL_FIELDS_IN_SECTION[sec.id] ?? []).includes(
+                !matchField(
+                  OPTIONAL_FIELDS_IN_SECTION[sec.id] ?? [],
                   nonCustomField
                 )
             )

@@ -890,11 +890,7 @@ export const addressFHIRPropertyTemplateTransformer =
     }
   }
 
-enum FHIRAddressLineLocationLevel {
-  locationLevel3 = 'locationLevel3',
-  locationLevel4 = 'locationLevel4',
-  locationLevel5 = 'locationLevel5'
-}
+type FHIRAddressLineLocationLevel = `locationLevel${number}`
 
 export const addressLineTemplateTransformer =
   (
@@ -988,14 +984,14 @@ export const eventLocationAddressLineTemplateTransformer =
     }
   }
 
-enum SupportedFacilityFHIRProp {
-  locationLevel3 = 'locationLevel3',
-  locationLevel4 = 'locationLevel4',
-  locationLevel5 = 'locationLevel5',
-  locationLevel6 = 'locationLevel6',
-  district = 'district',
-  state = 'state',
-  country = 'country'
+function isSupportedFacilityFHIRProp(
+  fhirProp: keyof typeof FHIRPropLocationLevel
+): boolean {
+  const locationLevelPattern = /^locationLevel(\d+)$/
+
+  const validProps: string[] = ['district', 'state', 'country']
+
+  return validProps.includes(fhirProp) || locationLevelPattern.test(fhirProp)
 }
 
 export const eventLocationAddressFHIRPropertyTemplateTransformer =
@@ -1016,7 +1012,7 @@ export const eventLocationAddressFHIRPropertyTemplateTransformer =
       queryData.eventLocation?.type &&
       queryData.eventLocation?.type === 'HEALTH_FACILITY' &&
       queryData.eventLocation?.id &&
-      fhirProp in SupportedFacilityFHIRProp &&
+      isSupportedFacilityFHIRProp(fhirProp) &&
       !field.name.includes('international')
     ) {
       if (!offlineData) {
@@ -1042,7 +1038,7 @@ export const eventLocationAddressFHIRPropertyTemplateTransformer =
     } else if (
       queryData.eventLocation?.type &&
       queryData.eventLocation?.type === 'HEALTH_FACILITY' &&
-      !(fhirProp in SupportedFacilityFHIRProp)
+      !isSupportedFacilityFHIRProp(fhirProp)
     ) {
       return
     } else if (addressFromQuery) {

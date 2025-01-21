@@ -154,24 +154,10 @@ interface IAddress {
   [key: string]: any
 }
 
-const getDefaultAddressLines = (): string[] => [
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  ''
-] // lines must be available as empty strings for GraphQL to parse all options
+const getDefaultAddressLines = (): string[] =>
+  Array.from({ length: 30 }, () => '')
+// lines must be available as empty strings for GraphQL to parse all options
+// TODO Putting 30 as the max for now until I have a better idea
 
 export const addressMutationTransformer =
   (config: {

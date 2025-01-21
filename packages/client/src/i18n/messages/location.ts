@@ -15,9 +15,7 @@ interface ILocationMessages
   DISTRICT: MessageDescriptor
   CITY: MessageDescriptor
   STATE: MessageDescriptor
-  LOCATION_LEVEL_3: MessageDescriptor
-  LOCATION_LEVEL_4: MessageDescriptor
-  LOCATION_LEVEL_5: MessageDescriptor
+  [key: `LOCATION_LEVEL_${number}`]: MessageDescriptor
 }
 
 const messagesToDefine: ILocationMessages = {
@@ -35,23 +33,23 @@ const messagesToDefine: ILocationMessages = {
     id: 'form.field.label.state',
     defaultMessage: 'State',
     description: 'Label for State'
-  },
-  LOCATION_LEVEL_3: {
-    id: 'form.field.label.locationLevel3',
-    defaultMessage: 'Location Level 3',
-    description: 'Label for locationLevel3'
-  },
-  LOCATION_LEVEL_4: {
-    id: 'form.field.label.locationLevel4',
-    defaultMessage: 'Location Level 4',
-    description: 'Label for locationLevel4'
-  },
-  LOCATION_LEVEL_5: {
-    id: 'form.field.label.locationLevel5',
-    defaultMessage: 'Location Level 5',
-    description: 'Label for locationLevel5'
   }
 }
 
-export const locationMessages: ILocationMessages =
-  defineMessages(messagesToDefine)
+const getLocationLevelMessage = (level: string): MessageDescriptor => {
+  return {
+    id: `form.field.label.locationLevel${level}`,
+    defaultMessage: `Location Level ${level}`,
+    description: `Label for locationLevel${level}`
+  }
+}
+
+export const locationMessages = (location: string): MessageDescriptor => {
+  const match = String(location).match(/^LOCATION_LEVEL_(\d+)$/)
+  if (location && match) {
+    const levelNumber = match[1]
+    messagesToDefine[location] = getLocationLevelMessage(levelNumber)
+  }
+
+  return defineMessages(messagesToDefine)[location]
+}

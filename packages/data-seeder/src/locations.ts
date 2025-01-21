@@ -26,12 +26,9 @@ const LocationSchema = z.array(
     partOf: z.string(),
     locationType: z.enum(['ADMIN_STRUCTURE', 'HEALTH_FACILITY', 'CRVS_OFFICE']),
     jurisdictionType: z
-      .enum([
-        'STATE',
-        'DISTRICT',
-        'LOCATION_LEVEL_3',
-        'LOCATION_LEVEL_4',
-        'LOCATION_LEVEL_5'
+      .union([
+        z.enum(['STATE', 'DISTRICT']),
+        z.string().regex(/^LOCATION_LEVEL_\d+$/)
       ])
       .optional(),
     statistics: z

@@ -37,10 +37,7 @@ export enum JurisdictionType {
   STATE = 'STATE',
   DISTRICT = 'DISTRICT',
   LOCATION_LEVEL_1 = 'LOCATION_LEVEL_1',
-  LOCATION_LEVEL_2 = 'LOCATION_LEVEL_2',
-  LOCATION_LEVEL_3 = 'LOCATION_LEVEL_3',
-  LOCATION_LEVEL_4 = 'LOCATION_LEVEL_4',
-  LOCATION_LEVEL_5 = 'LOCATION_LEVEL_5'
+  LOCATION_LEVEL_2 = 'LOCATION_LEVEL_2'
 }
 
 enum Status {
@@ -112,15 +109,8 @@ const locationRequestSchema = Joi.object({
     .valid(Code.ADMIN_STRUCTURE, Code.CRVS_OFFICE, Code.HEALTH_FACILITY)
     .required(),
   jurisdictionType: Joi.string()
-    .valid(
-      JurisdictionType.DISTRICT,
-      JurisdictionType.STATE,
-      JurisdictionType.LOCATION_LEVEL_1,
-      JurisdictionType.LOCATION_LEVEL_2,
-      JurisdictionType.LOCATION_LEVEL_3,
-      JurisdictionType.LOCATION_LEVEL_4,
-      JurisdictionType.LOCATION_LEVEL_5
-    )
+    .valid(JurisdictionType.DISTRICT, JurisdictionType.STATE)
+    .regex(/^LOCATION_LEVEL_\d+$/)
     .optional(),
   statistics: Joi.array()
     .items(locationStatisticSchema)
