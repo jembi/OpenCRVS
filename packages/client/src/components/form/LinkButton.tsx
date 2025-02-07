@@ -29,6 +29,7 @@ export const LinkButtonField = ({
   fields,
   form,
   draft,
+  draftId,
   fieldDefinition,
   setFieldValue,
   isDisabled
@@ -36,6 +37,7 @@ export const LinkButtonField = ({
   fields: IFormField[]
   form: IFormSectionData
   draft: IFormData
+  draftId: string
   fieldDefinition: Ii18nLinkButtonFormField
   setFieldValue: (name: string, value: IFormFieldValue) => void
   isDisabled?: boolean
@@ -98,6 +100,7 @@ export const LinkButtonField = ({
           form,
           config,
           draft,
+          draftId,
           user
         )
       }}

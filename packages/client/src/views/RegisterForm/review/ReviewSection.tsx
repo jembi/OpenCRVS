@@ -1937,6 +1937,7 @@ class ReviewSectionComp extends React.Component<FullProps, State> {
                       setAllFieldsDirty={false}
                       fields={reviewSection.groups[0].fields}
                       draftData={declaration.data}
+                      draftId={declaration.id}
                       initialValues={
                         declaration.data.preview ?? declaration.data.review
                       }

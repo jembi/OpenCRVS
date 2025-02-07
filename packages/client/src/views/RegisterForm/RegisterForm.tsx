@@ -1077,6 +1077,7 @@ class RegisterFormView extends React.Component<FullProps, State> {
             declaration.data[activeSection.id],
             config,
             declaration.data,
+            declaration.id,
             userDetails
           )
         : true
@@ -1304,6 +1305,7 @@ class RegisterFormView extends React.Component<FullProps, State> {
                                   activeSectionGroup
                                 )}
                                 draftData={declaration.data}
+                                draftId={declaration.id}
                                 onSetTouched={(setTouchedFunc) => {
                                   this.setAllFormFieldsTouched = setTouchedFunc
                                 }}

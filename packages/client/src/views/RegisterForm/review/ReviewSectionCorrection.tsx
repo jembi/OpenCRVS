@@ -238,6 +238,7 @@ class ReviewSectionCorrectionComp extends React.Component<FullProps, State> {
             onChange={this.storeData}
             setAllFieldsDirty={false}
             draftData={this.props.declaration.data}
+            draftId={this.props.declaration.id}
           />
         </Dialog>
       </>
