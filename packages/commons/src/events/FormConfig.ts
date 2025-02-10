@@ -35,7 +35,11 @@ export const FormConfig = z.object({
   review: z.object({
     title: TranslationConfig.describe(
       'Title of the form to show in review page'
-    )
+    ),
+    fields: z
+      .array(FieldConfig)
+      .describe('Fields to be rendered on the review page for metadata')
+      .optional()
   })
 })
 
