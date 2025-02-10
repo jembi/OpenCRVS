@@ -55,6 +55,7 @@ export function mapFieldTypeToZod(type: FieldType, required?: boolean) {
       break
     case FieldType.DIVIDER:
     case FieldType.TEXT:
+    case FieldType.TEXTAREA:
     case FieldType.BULLET_LIST:
     case FieldType.PAGE_HEADER:
     case FieldType.LOCATION:
@@ -62,6 +63,7 @@ export function mapFieldTypeToZod(type: FieldType, required?: boolean) {
     case FieldType.COUNTRY:
     case FieldType.RADIO_GROUP:
     case FieldType.PARAGRAPH:
+    case FieldType.SIGNATURE:
     case FieldType.HIDDEN:
       schema = TextValue
 
