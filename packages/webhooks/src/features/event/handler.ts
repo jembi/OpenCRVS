@@ -21,7 +21,7 @@ import Webhook, { IWebhookModel, TRIGGERS } from '@webhooks/model/webhook'
 import { getQueue } from '@webhooks/queue'
 import { Queue } from 'bullmq'
 import fetch from 'node-fetch'
-import * as ShortUIDGen from 'short-uid'
+import ShortUIDGen from 'short-uid'
 import { RegisteredRecord } from '@opencrvs/commons/types'
 
 export interface IAuthHeader {
@@ -227,6 +227,71 @@ export async function marriageRegisteredHandler(
   request: Hapi.Request,
   h: Hapi.ResponseToolkit
 ) {
+  return h.response().code(200)
+}
+
+export async function approveRejectHandler(
+  request: Hapi.Request,
+  h: Hapi.ResponseToolkit
+) {
+  const { eventType, statusType } = request.params
+  const bundle = request.payload as { trackingId: string }
+
+  const currentTrigger = `${eventType}/${statusType}`.toLowerCase()
+
+  const webhookQueue = getQueue()
+
+  const webhooks: IWebhookModel[] | null = await Webhook.find()
+  if (!webhooks) {
+    throw internal('Failed to find webhooks')
+  }
+  logger.info(`Subscribed webhooks: ${JSON.stringify(webhooks)}`)
+  for (const webhookToNotify of webhooks) {
+    logger.info(`Queueing webhook ${webhookToNotify.trigger} ${currentTrigger}`)
+    if (webhookToNotify.trigger.toLowerCase() === currentTrigger) {
+      const payload = {
+        timestamp: new Date().toISOString(),
+        id: webhookToNotify.webhookId,
+        event: {
+          hub: {
+            topic: currentTrigger
+          },
+          context: {
+            trackingId: bundle?.trackingId,
+            status: statusType
+          }
+        }
+      }
+      logger.info(
+        `Dispatching webhook: ${JSON.stringify({
+          timestamp: payload.timestamp,
+          id: payload.id,
+          event: { hub: { topic: payload.event.hub.topic } },
+          context: ['<<redacted>>']
+        })}`
+      )
+      const hmac = createRequestSignature(
+        'sha256',
+        webhookToNotify.sha_secret,
+        JSON.stringify(payload)
+      )
+      webhookQueue.add(
+        `${webhookToNotify.webhookId}_${currentTrigger}`,
+        {
+          payload,
+          url: webhookToNotify.address,
+          hmac
+        },
+        {
+          jobId: `WEBHOOK_${new ShortUIDGen().randomUUID().toUpperCase()}_${
+            webhookToNotify.webhookId
+          }`,
+          attempts: 3
+        }
+      )
+    }
+  }
+
   return h.response().code(200)
 }
 

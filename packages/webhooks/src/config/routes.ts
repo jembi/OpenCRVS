@@ -17,6 +17,7 @@ import {
   deleteWebhookByClientIdHandler
 } from '@webhooks/features/manage/handler'
 import {
+  approveRejectHandler,
   birthRegisteredHandler,
   deathRegisteredHandler,
   marriageRegisteredHandler
@@ -104,6 +105,15 @@ export const getRoutes = () => {
       config: {
         tags: ['api'],
         description: 'Dispatches a webhook for the marriage registration event'
+      }
+    },
+    {
+      method: 'POST',
+      path: '/events/{eventType}/status/{statusType}',
+      handler: approveRejectHandler,
+      config: {
+        tags: ['api'],
+        description: 'Dispatches a webhook for the event'
       }
     }
   ]

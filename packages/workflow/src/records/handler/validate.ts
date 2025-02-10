@@ -15,6 +15,8 @@ import { toValidated } from '@workflow/records/state-transitions'
 import { auditEvent } from '@workflow/records/audit'
 import { validateRequest } from '@workflow/utils/index'
 import * as z from 'zod'
+import { invokeWebhooks } from '@workflow/records/webhooks'
+import { getEventType } from '@workflow/features/registration/utils'
 import { SCOPES } from '@opencrvs/commons/authentication'
 
 export const validateRoute = createRoute({
@@ -43,6 +45,14 @@ export const validateRoute = createRoute({
 
     await indexBundle(validatedRecord, token)
     await auditEvent('sent-for-approval', validatedRecord, token)
+
+    await invokeWebhooks({
+      bundle: record,
+      token,
+      event: getEventType(record),
+      isNotRegistered: true,
+      statusType: 'validated'
+    })
 
     return validatedRecord
   }
