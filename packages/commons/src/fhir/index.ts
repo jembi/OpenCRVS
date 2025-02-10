@@ -274,7 +274,14 @@ export type FhirResourceType =
 export type Identifier = fhir3.Identifier
 
 export type Coding = fhir3.Coding
-export type QuestionnaireResponse = fhir3.QuestionnaireResponse
+
+type QuestionnaireResponseItem = fhir3.QuestionnaireResponseItem & {
+  text: string
+}
+
+export type QuestionnaireResponse = fhir3.QuestionnaireResponse & {
+  item?: QuestionnaireResponseItem[]
+}
 export type CompositionRelatesTo = fhir3.CompositionRelatesTo
 
 export type EncounterParticipant = Omit<
