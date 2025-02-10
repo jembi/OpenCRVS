@@ -729,7 +729,7 @@ describe('validate', () => {
   describe('isValidDeathOccrenceDate. Checks a given date of death is valid', () => {
     const drafts = {
       deceased: {
-        birthDate: '1991-10-22'
+        deceasedBirthDate: '1991-10-22'
       }
     }
 
