@@ -1120,7 +1120,12 @@ export function questionnaireToTemplateFieldTransformer(
       if (!offlineCountryConfig) {
         return
       }
-      const options = getFieldOptions(field, queryData, offlineCountryConfig)
+      const options = getFieldOptions(
+        sectionId,
+        field,
+        queryData,
+        offlineCountryConfig
+      )
       transformedData[sectionId][field.name] =
         options
           .find((option) => option.value === selectedQuestion.value)

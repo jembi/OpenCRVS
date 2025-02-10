@@ -1063,6 +1063,7 @@ class FormSectionComponent extends React.Component<Props> {
                   ...field,
                   type: SELECT_WITH_OPTIONS,
                   options: getFieldOptions(
+                    sectionName,
                     field,
                     values,
                     offlineCountryConfig,
@@ -1073,6 +1074,7 @@ class FormSectionComponent extends React.Component<Props> {
               ? ({
                   ...field,
                   options: getFieldOptions(
+                    sectionName,
                     field,
                     values,
                     offlineCountryConfig,
