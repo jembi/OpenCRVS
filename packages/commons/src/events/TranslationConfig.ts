@@ -31,7 +31,6 @@ type ExplicitTypeToReduceDeclarationSize = z.ZodObject<
   MessageDescriptorZod,
   'strip',
   z.ZodTypeAny,
-  TranslationConfig,
   TranslationConfig
 >
 

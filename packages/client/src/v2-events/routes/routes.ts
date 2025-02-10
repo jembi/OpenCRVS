@@ -83,7 +83,8 @@ export const ROUTES = {
           REQUEST_CORRECTION: correctionRoutes
         }
       ),
-      WORKQUEUES: workqueueRoutes
+      WORKQUEUES: workqueueRoutes,
+      ADVANCED_SEARCH: route('advanced-search')
     }
   )
 }

@@ -138,6 +138,9 @@ function mapFieldTypeToElasticsearch(field: FieldConfig) {
     case FieldType.COUNTRY:
     case FieldType.CHECKBOX:
     case FieldType.LOCATION:
+    case FieldType.ADMINISTRATIVE_AREA:
+    case FieldType.FACILITY:
+    case FieldType.OFFICE:
       return { type: 'keyword' }
     case FieldType.ADDRESS:
       const addressProperties = {

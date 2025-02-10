@@ -10,7 +10,7 @@
  */
 
 import React from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, RouteObject } from 'react-router-dom'
 import { Debug } from '@client/v2-events/features/debug/debug'
 import { router as correctionRouter } from '@client/v2-events/features/events/actions/correct/request/router'
 import * as Declare from '@client/v2-events/features/events/actions/declare'
@@ -23,6 +23,7 @@ import { EventOverviewIndex } from '@client/v2-events/features/workqueues/EventO
 import { router as workqueueRouter } from '@client/v2-events/features/workqueues/router'
 import { WorkqueueLayout } from '@client/v2-events/layouts'
 import { TRPCProvider } from '@client/v2-events/trpc'
+import { advancedSearchRouter } from '@client/v2-events/features/events/AdvancedSearch/router'
 import { ROUTES } from './routes'
 
 /**
@@ -115,6 +116,7 @@ export const routesConfig = {
           element: <PrintCertificate.Review />
         }
       ]
-    }
+    },
+    advancedSearchRouter
   ]
-}
+} satisfies RouteObject

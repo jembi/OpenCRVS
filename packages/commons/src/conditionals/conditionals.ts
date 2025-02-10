@@ -9,7 +9,7 @@
  * Copyright (C) The OpenCRVS Authors located at https://github.com/opencrvs/opencrvs-core/blob/master/AUTHORS.
  */
 
-import { ActionType } from '../events'
+import { ActionType } from '../events/ActionType'
 import { ITokenPayload } from '../authentication'
 import { ActionFormData } from '../events/ActionDocument'
 import { EventDocument } from '../events/EventDocument'

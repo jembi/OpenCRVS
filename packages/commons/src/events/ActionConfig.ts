@@ -9,22 +9,11 @@
  * Copyright (C) The OpenCRVS Authors located at https://github.com/opencrvs/opencrvs-core/blob/master/AUTHORS.
  */
 import { z } from 'zod'
-import {
-  EnableConditional,
-  HideConditional,
-  ShowConditional
-} from './Conditional'
+
 import { FormConfig, FormPage } from './FormConfig'
 import { TranslationConfig } from './TranslationConfig'
 import { ActionType } from './ActionType'
-
-const ActionConditional = z.discriminatedUnion('type', [
-  // Action can be shown / hidden
-  ShowConditional,
-  HideConditional,
-  // Action can be shown to the user in the list but as disabled
-  EnableConditional
-])
+import { ActionConditional } from './ActionConditional'
 
 export const ActionConfigBase = z.object({
   label: TranslationConfig,

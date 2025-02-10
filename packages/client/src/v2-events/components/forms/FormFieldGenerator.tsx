@@ -18,6 +18,7 @@ import * as React from 'react'
 import styled, { keyframes } from 'styled-components'
 import {
   evalExpressionInFieldDefinition,
+  FIELD_SEPARATOR,
   getConditionalActionsForField,
   getDependentFields,
   handleInitialValue,
@@ -35,6 +36,8 @@ import {
   FieldValue,
   FileFieldValue,
   isAddressFieldType,
+  isAdministrativeAreaFieldType,
+  isFacilityFieldType,
   isBulletListFieldType,
   isCheckboxFieldType,
   isCountryFieldType,
@@ -42,6 +45,7 @@ import {
   isDividerFieldType,
   isFileFieldType,
   isLocationFieldType,
+  isOfficeFieldType,
   isPageHeaderFieldType,
   isParagraphFieldType,
   isRadioGroupFieldType,
@@ -69,11 +73,11 @@ import {
   Checkbox,
   Date as DateField,
   RadioGroup,
-  Location,
   LocationSearch,
   Select,
   SelectCountry,
-  Text
+  Text,
+  AdministrativeArea
 } from '@client/v2-events/features/events/registered-fields'
 
 import { SubHeader } from '@opencrvs/components'
@@ -313,33 +317,49 @@ const GeneratedInputField = React.memo(
         </InputField>
       )
     }
-    if (isLocationFieldType(field)) {
-      if (field.config.options.type === 'HEALTH_FACILITY')
-        return (
-          <InputField {...inputFieldProps}>
-            <LocationSearch.Input
-              {...field.config}
-              value={field.value}
-              setFieldValue={setFieldValue}
-            />
-          </InputField>
-        )
-
+    if (isAdministrativeAreaFieldType(field)) {
       return (
         <InputField {...inputFieldProps}>
-          <Location.Input
+          <AdministrativeArea.Input
             {...field.config}
             value={field.value}
+            partOf={'0'} // @todo add partof property from field config
             setFieldValue={setFieldValue}
-            partOf={
-              (field.config.options?.partOf?.$data &&
-                (makeFormikFieldIdsOpenCRVSCompatible(formData)[
-                  field.config.options?.partOf.$data
-                ] as string | undefined | null)) ??
-              null
-            }
           />
         </InputField>
+      )
+    }
+
+    if (isLocationFieldType(field)) {
+      return (
+        <LocationSearch.Input
+          {...field.config}
+          value={field.value}
+          searchableResource={['locations']}
+          setFieldValue={setFieldValue}
+        />
+      )
+    }
+
+    if (isOfficeFieldType(field)) {
+      return (
+        <LocationSearch.Input
+          {...field.config}
+          value={field.value}
+          searchableResource={['offices']}
+          setFieldValue={setFieldValue}
+        />
+      )
+    }
+
+    if (isFacilityFieldType(field)) {
+      return (
+        <LocationSearch.Input
+          {...field.config}
+          value={field.value}
+          searchableResource={['facilities']}
+          setFieldValue={setFieldValue}
+        />
       )
     }
     if (isDividerFieldType(field)) {
@@ -574,12 +594,6 @@ class FormSectionComponent extends React.Component<AllProps> {
   }
 }
 
-/*
- * Formik has a feature that automatically nests all form keys that have a dot in them.
- * Because our form field ids can have dots in them, we temporarily transform those dots
- * to a different character before passing the data to Formik. This function unflattens
- */
-export const FIELD_SEPARATOR = '____'
 function makeFormFieldIdsFormikCompatible<T>(data: Record<string, T>) {
   return Object.fromEntries(
     Object.entries(data).map(([key, value]) => [

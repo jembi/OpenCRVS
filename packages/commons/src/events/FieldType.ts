@@ -23,7 +23,10 @@ export const FieldType = {
   SELECT: 'SELECT',
   COUNTRY: 'COUNTRY',
   LOCATION: 'LOCATION',
-  DIVIDER: 'DIVIDER'
+  DIVIDER: 'DIVIDER',
+  ADMINISTRATIVE_AREA: 'ADMINISTRATIVE_AREA',
+  FACILITY: 'FACILITY',
+  OFFICE: 'OFFICE'
 } as const
 
 export const fieldTypes = Object.values(FieldType)

@@ -175,7 +175,7 @@ const Country = BaseField.extend({
 
 export type Country = z.infer<typeof Country>
 
-const LocationOptions = z.object({
+const AdminAreaOptions = z.object({
   partOf: z
     .object({
       $data: z.string()
@@ -185,12 +185,30 @@ const LocationOptions = z.object({
   type: z.enum(['ADMIN_STRUCTURE', 'HEALTH_FACILITY', 'CRVS_OFFICE'])
 })
 
+const AdministrativeArea = BaseField.extend({
+  type: z.literal(FieldType.ADMINISTRATIVE_AREA),
+  configuration: AdminAreaOptions
+}).describe('Administrative area input field')
+
+export type AdministrativeArea = z.infer<typeof AdministrativeArea>
+
 const Location = BaseField.extend({
-  type: z.literal(FieldType.LOCATION),
-  options: LocationOptions
-}).describe('Location input field')
+  type: z.literal(FieldType.LOCATION)
+})
 
 export type Location = z.infer<typeof Location>
+
+const Facility = BaseField.extend({
+  type: z.literal(FieldType.FACILITY)
+})
+
+export type Facility = z.infer<typeof Facility>
+
+const Office = BaseField.extend({
+  type: z.literal(FieldType.OFFICE)
+})
+
+export type Office = z.infer<typeof Office>
 
 const Address = BaseField.extend({
   type: z.literal(FieldType.ADDRESS),
@@ -216,8 +234,11 @@ export type AllFields =
   | typeof Checkbox
   | typeof File
   | typeof Country
-  | typeof Location
+  | typeof AdministrativeArea
   | typeof Divider
+  | typeof Location
+  | typeof Facility
+  | typeof Office
 
 /** @knipignore */
 export type Inferred =
@@ -234,6 +255,9 @@ export type Inferred =
   | z.infer<typeof Country>
   | z.infer<typeof Location>
   | z.infer<typeof Divider>
+  | z.infer<typeof AdministrativeArea>
+  | z.infer<typeof Facility>
+  | z.infer<typeof Office>
 
 export const FieldConfig = z.discriminatedUnion('type', [
   Address,
@@ -247,16 +271,20 @@ export const FieldConfig = z.discriminatedUnion('type', [
   Checkbox,
   File,
   Country,
+  AdministrativeArea,
+  Divider,
   Location,
-  Divider
-]) as unknown as z.ZodType<Inferred, any, Inferred>
+  Facility,
+  Office
+]) as unknown as z.ZodDiscriminatedUnion<'type', AllFields[]>
 
 export type SelectField = z.infer<typeof Select>
 export type LocationField = z.infer<typeof Location>
+export type RadioField = z.infer<typeof RadioGroup>
 export type AddressField = z.infer<typeof Address>
 export type FieldConfig = Inferred
 
 export type FieldProps<T extends FieldType> = Extract<FieldConfig, { type: T }>
 export type SelectOption = z.infer<typeof SelectOption>
-export type LocationOptions = z.infer<typeof LocationOptions>
+export type AdminAreaOptions = z.infer<typeof AdminAreaOptions>
 export type FieldConditional = z.infer<typeof FieldConditional>

@@ -50,12 +50,12 @@ function useAdminLocations(partOf: string) {
   }))
 }
 
-function LocationInput({
+export function AdministrativeAreaInput({
   setFieldValue,
   value,
   partOf,
   ...props
-}: FieldProps<'LOCATION'> & {
+}: FieldProps<'ADMINISTRATIVE_AREA'> & {
   setFieldValue: (name: string, val: string | undefined) => void
   partOf: string | null
   value?: string
@@ -74,7 +74,7 @@ function LocationInput({
   )
 }
 
-function LocationOutput({ value }: { value: Stringifiable }) {
+function AdministrativeAreaOutput({ value }: { value: Stringifiable }) {
   const locations = useSelector(getLocations)
 
   const location = value.toString() && locations[value.toString()]
@@ -87,8 +87,8 @@ function useStringifier() {
   return (value: string) => locations[value].name
 }
 
-export const Location = {
-  Input: LocationInput,
-  Output: LocationOutput,
+export const AdministrativeArea = {
+  Input: AdministrativeAreaInput,
+  Output: AdministrativeAreaOutput,
   useStringifier: useStringifier
 }

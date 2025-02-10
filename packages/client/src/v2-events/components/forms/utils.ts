@@ -18,7 +18,13 @@ import {
   validate
 } from '@opencrvs/commons/client'
 import { DependencyInfo } from '@client/forms'
-import { FIELD_SEPARATOR } from './FormFieldGenerator'
+
+/*
+ * Formik has a feature that automatically nests all form keys that have a dot in them.
+ * Because our form field ids can have dots in them, we temporarily transform those dots
+ * to a different character before passing the data to Formik. This function unflattens
+ */
+export const FIELD_SEPARATOR = '____'
 
 export function handleInitialValue(
   field: FieldConfig,

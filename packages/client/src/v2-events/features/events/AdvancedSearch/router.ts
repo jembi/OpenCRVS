@@ -8,9 +8,11 @@
  *
  * Copyright (C) The OpenCRVS Authors located at https://github.com/opencrvs/opencrvs-core/blob/master/AUTHORS.
  */
+import React from 'react'
+import { ROUTES } from '@client/v2-events/routes'
+import AdvancedSearch from './AdvancedSearch'
 
-export interface User {
-  id: string
-  name: { use: string; given: string[]; family: string }[]
-  role: string
+export const advancedSearchRouter = {
+  path: ROUTES.V2.ADVANCED_SEARCH.path,
+  element: React.createElement(AdvancedSearch)
 }
