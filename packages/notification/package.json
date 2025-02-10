@@ -58,6 +58,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "29.7.0",
     "jest-fetch-mock": "^2.1.2",
+    "mockingoose": "^2.15.2",
     "nodemon": "^3.0.0",
     "prettier": "2.8.8",
     "ts-jest": "29.2.5",

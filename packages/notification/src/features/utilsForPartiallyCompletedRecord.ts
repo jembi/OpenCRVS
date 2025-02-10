@@ -44,7 +44,7 @@ export function getInformantName(record: InProgressRecord | RejectedRecord) {
     record,
     resourceIdentifierToUUID(informantRelation.patient.reference)
   )
-  const name = informant?.name?.find(({ use }) => use === 'en')
+  const name = informant?.name?.find(({ use }: { use: string }) => use === 'en')
   if (!name) {
     return
   }
