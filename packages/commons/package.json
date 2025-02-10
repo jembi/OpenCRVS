@@ -26,7 +26,8 @@
     "build:esm": "tsc --project tsconfig.esm.build.json",
     "build": "yarn build:default && yarn build:esm",
     "build:watch": "concurrently \"tsc --watch --project tsconfig.build.json\" \"tsc --watch --project tsconfig.esm.build.json\"",
-    "build:clean": "rm -rf build"
+    "build:clean": "rm -rf build",
+    "lint": "eslint -c .eslintrc.js --fix ./src --max-warnings=0"
   },
   "private": true,
   "dependencies": {
