@@ -274,13 +274,15 @@ describe('render toggle settings', () => {
 
     it('should delete system successfully', async () => {
       component
-        .find('#toggleMenu-dropdownMenu')
+        .find('#toggleMenu-4a7ba5bc-46c7-469e-8d61-20dd4d86e79a-dropdownMenu')
         .hostNodes()
         .first()
         .simulate('click')
 
       component
-        .find('#toggleMenu-Dropdown-Content')
+        .find(
+          '#toggleMenu-4a7ba5bc-46c7-469e-8d61-20dd4d86e79a-Dropdown-Content'
+        )
         .find('li')
         .hostNodes()
         .at(3)
@@ -331,13 +333,15 @@ describe('render toggle settings', () => {
 
     it('should deactivated system successfully', async () => {
       component
-        .find('#toggleMenu-dropdownMenu')
+        .find('#toggleMenu-4a7ba5bc-46c7-469e-8d61-20dd4d86e79a-dropdownMenu')
         .hostNodes()
         .first()
         .simulate('click')
 
       component
-        .find('#toggleMenu-Dropdown-Content')
+        .find(
+          '#toggleMenu-4a7ba5bc-46c7-469e-8d61-20dd4d86e79a-Dropdown-Content'
+        )
         .find('li')
         .hostNodes()
         .at(2)
@@ -389,13 +393,15 @@ describe('render toggle settings', () => {
 
     it('should active system successfully', async () => {
       component
-        .find('#toggleMenu-dropdownMenu')
+        .find('#toggleMenu-5923118f-c633-40c6-ba97-c3e3cbb412aa-dropdownMenu')
         .hostNodes()
         .last()
         .simulate('click')
 
       component
-        .find('#toggleMenu-Dropdown-Content')
+        .find(
+          '#toggleMenu-5923118f-c633-40c6-ba97-c3e3cbb412aa-Dropdown-Content'
+        )
         .hostNodes()
         .last()
         .find('li')

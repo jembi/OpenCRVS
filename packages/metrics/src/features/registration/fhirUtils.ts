@@ -18,6 +18,11 @@ import {
 export const CAUSE_OF_DEATH_CODE = 'ICD10'
 export const MANNER_OF_DEATH_CODE = 'uncertified-manner-of-death'
 import { NOTIFICATION_TYPES } from '@metrics/features/metrics/constants'
+import {
+  isURLReference,
+  URLReference,
+  urlReferenceToResourceIdentifier
+} from '@opencrvs/commons/types'
 
 export function getSectionBySectionCode(
   bundle: fhir.Bundle,
@@ -148,8 +153,17 @@ export function getPaymentReconciliation(
     const paymentDetailsReference = task.extension?.find((x) =>
       x.url.includes('paymentDetails')
     )?.valueReference?.reference
-    return bundle.entry?.find((x) => x.fullUrl === paymentDetailsReference)
-      ?.resource as fhir.PaymentReconciliation
+
+    const paymentReconciliation = bundle.entry?.find(
+      (x) =>
+        x.fullUrl &&
+        (isURLReference(x.fullUrl)
+          ? urlReferenceToResourceIdentifier(x.fullUrl as URLReference)
+          : x.fullUrl) === paymentDetailsReference
+    )?.resource
+
+    if (paymentReconciliation)
+      return paymentReconciliation as fhir.PaymentReconciliation
   }
 
   return getResourceByType<fhir.PaymentReconciliation>(

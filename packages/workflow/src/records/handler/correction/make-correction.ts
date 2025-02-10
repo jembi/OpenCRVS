@@ -32,7 +32,7 @@ import { CorrectionRequestInput } from '@workflow/records/validations'
 import { createRoute } from '@workflow/states'
 import { getToken } from '@workflow/utils/auth-utils'
 import { validateRequest } from '@workflow/utils/index'
-import { findActiveCorrectionRequest } from './utils'
+import { findActiveCorrectionRequest, updateFullUrl } from './utils'
 import { SCOPES } from '@opencrvs/commons/authentication'
 
 export const makeCorrectionRoute = createRoute({
@@ -115,11 +115,15 @@ export const makeCorrectionRoute = createRoute({
       getEventType(record)
     )
 
-    await indexBundle(recordWithUpdatedValues, token)
-    await sendBundleToHearth(recordWithUpdatedValues)
-    await createNewAuditEvent(recordWithUpdatedValues, token)
+    const res = await sendBundleToHearth(recordWithUpdatedValues)
 
-    const correctedRecord = changeState(recordWithUpdatedValues, 'REGISTERED')
+    const recordWithUpdatedFullUrl = updateFullUrl(res, recordWithUpdatedValues)
+
+    await indexBundle(recordWithUpdatedFullUrl, token)
+
+    await createNewAuditEvent(recordWithUpdatedFullUrl, token)
+
+    const correctedRecord = changeState(recordWithUpdatedFullUrl, 'REGISTERED')
 
     const { unassignedRecord, unassignedRecordWithTaskOnly } =
       await toUnassigned(correctedRecord, token)

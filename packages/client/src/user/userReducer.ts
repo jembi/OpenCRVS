@@ -259,6 +259,19 @@ export interface IUserFormState {
   userAuditForm: IUserAuditForm
 }
 
+function withScopes<T extends Record<string, unknown>>(
+  values: T,
+  userRoles: UserRole[]
+): T & { scopes?: string[] } {
+  if (!('role' in values)) {
+    return values
+  }
+  return {
+    ...values,
+    scopes: userRoles.find((role) => role.id === values.role)?.scopes
+  }
+}
+
 const fetchRoles = async (getState: () => IStoreState) => {
   const roles = await roleQueries.fetchRoles()
   return [getState().profile.tokenPayload?.scope, roles.data.getUserRoles]
@@ -283,11 +296,13 @@ export const userFormReducer: LoopReducer<IUserFormState, UserFormAction> = (
         })
       )
 
-    case MODIFY_USER_FORM_DATA:
+    case MODIFY_USER_FORM_DATA: {
+      const formData = action.payload.data
       return {
         ...state,
-        userFormData: action.payload.data
+        userFormData: withScopes(formData, state.userRoles)
       }
+    }
 
     case CLEAR_USER_FORM_DATA:
       return {
@@ -475,7 +490,7 @@ export const userFormReducer: LoopReducer<IUserFormState, UserFormAction> = (
 
       return {
         ...state,
-        userFormData: formData.user,
+        userFormData: withScopes(formData.user, state.userRoles),
         userDetailsStored: true
       }
 
