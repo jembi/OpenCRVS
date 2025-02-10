@@ -10,7 +10,7 @@
  */
 
 import * as React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { FileFieldValue } from '@opencrvs/commons'
 import { AppBar } from '@opencrvs/components/lib/AppBar'
@@ -20,6 +20,7 @@ import PanControls from '@opencrvs/components/lib/DocumentViewer/components/PanC
 import PanViewer from '@opencrvs/components/lib/DocumentViewer/components/PanViewer'
 import { Icon } from '@opencrvs/components/lib/Icon'
 import { Stack } from '@opencrvs/components/lib/Stack'
+import { FileFieldValueWithOption } from '@opencrvs/commons/client'
 import { getFullURL } from '@client/v2-events/features/files/useFileUpload'
 
 const ViewerWrapper = styled.div`
@@ -49,7 +50,9 @@ const ViewerContainer = styled.div`
 `
 
 interface IProps {
-  previewImage: Exclude<FileFieldValue, null>
+  previewImage:
+    | NonNullable<FileFieldValue>
+    | NonNullable<FileFieldValueWithOption>
   disableDelete?: boolean
   title?: string
   goBack: () => void
@@ -65,6 +68,22 @@ export function DocumentPreview({
   disableDelete,
   id
 }: IProps) {
+  const [imageSrc, setImageSrc] = useState(previewImage.filename)
+
+  useEffect(() => {
+    const cacheKey = getFullURL(previewImage.filename)
+    void caches.match(cacheKey).then((cachedResponse) => {
+      if (cachedResponse) {
+        void cachedResponse.blob().then((blob) => {
+          const blobUrl = URL.createObjectURL(blob)
+          setImageSrc(blobUrl)
+        })
+      } else {
+        console.log('Image not found in cache')
+      }
+    })
+  }, [previewImage])
+
   const [zoom, setZoom] = useState(1)
   const [rotation, setRotation] = useState(0)
 
@@ -149,7 +168,7 @@ export function DocumentPreview({
         <PanViewer
           key={Math.random()}
           id="document_image"
-          image={getFullURL(previewImage.filename)}
+          image={imageSrc}
           rotation={rotation}
           zoom={zoom}
         />

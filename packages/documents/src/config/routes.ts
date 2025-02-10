@@ -27,7 +27,7 @@ export const getRoutes = () => {
     // get presigned URL
     {
       method: 'GET',
-      path: `/presigned-url/${MINIO_BUCKET}/{fileUri}`,
+      path: `/presigned-url/${MINIO_BUCKET}/{fileUri*}`,
       handler: createPreSignedUrl,
       config: {
         tags: ['api']

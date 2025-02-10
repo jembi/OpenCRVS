@@ -41,6 +41,18 @@ export const AddressFieldValue = z
   .partial()
 
 export type AddressFieldValue = z.infer<typeof AddressFieldValue>
+export const FileFieldValueWithOption = z.object({
+  filename: z.string(),
+  originalFilename: z.string(),
+  type: z.string(),
+  option: z.string()
+})
+
+export type FileFieldValueWithOption = z.infer<typeof FileFieldValueWithOption>
+
+export const FileFieldWithOptionValue = z.array(FileFieldValueWithOption)
+
+export type FileFieldWithOptionValue = z.infer<typeof FileFieldWithOptionValue>
 
 export const CheckboxFieldValue = z.boolean()
 export type CheckboxFieldValue = z.infer<typeof CheckboxFieldValue>
@@ -49,6 +61,7 @@ export const FieldValue = z.union([
   TextValue,
   DateValue,
   FileFieldValue,
+  FileFieldWithOptionValue,
   CheckboxFieldValue,
   AddressFieldValue
 ])
@@ -60,6 +73,7 @@ export type FieldValue = z.infer<typeof FieldValue>
  * */
 export type FieldValueSchema =
   | typeof FileFieldValue
+  | typeof FileFieldWithOptionValue
   | typeof CheckboxFieldValue
   | typeof AddressFieldValue
   | z.ZodString

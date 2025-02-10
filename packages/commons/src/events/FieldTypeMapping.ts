@@ -18,6 +18,7 @@ import {
   Divider,
   FieldConfig,
   File,
+  FileUploadWithOptions,
   Location,
   PageHeader,
   Paragraph,
@@ -33,6 +34,7 @@ import {
   FieldValue,
   FieldValueSchema,
   FileFieldValue,
+  FileFieldWithOptionValue,
   TextValue
 } from './FieldValue'
 /**
@@ -74,6 +76,10 @@ export function mapFieldTypeToZod(type: FieldType, required?: boolean) {
       schema = FileFieldValue
 
       break
+    case FieldType.FILE_WITH_OPTIONS:
+      schema = FileFieldWithOptionValue
+
+      break
     case FieldType.ADDRESS:
       schema = AddressFieldValue
 
@@ -81,6 +87,46 @@ export function mapFieldTypeToZod(type: FieldType, required?: boolean) {
   }
 
   return required ? schema : schema.optional()
+}
+
+export function mapFieldTypeToElasticsearch(field: FieldConfig) {
+  switch (field.type) {
+    case FieldType.DATE:
+      // @TODO: This should be changed back to 'date'
+      // When we have proper validation of custom fields.
+      return { type: 'text' }
+    case FieldType.TEXT:
+    case FieldType.PARAGRAPH:
+    case FieldType.BULLET_LIST:
+    case FieldType.PAGE_HEADER:
+    case FieldType.ADDRESS:
+      return { type: 'text' }
+    case FieldType.DIVIDER:
+    case FieldType.RADIO_GROUP:
+    case FieldType.SELECT:
+    case FieldType.COUNTRY:
+    case FieldType.CHECKBOX:
+    case FieldType.LOCATION:
+      return { type: 'keyword' }
+    case FieldType.FILE:
+      return {
+        type: 'object',
+        properties: {
+          filename: { type: 'keyword' },
+          originalFilename: { type: 'keyword' },
+          type: { type: 'keyword' }
+        }
+      }
+    case FieldType.FILE_WITH_OPTIONS:
+      return {
+        type: 'object',
+        properties: {
+          filename: { type: 'keyword' },
+          originalFilename: { type: 'keyword' },
+          type: { type: 'keyword' }
+        }
+      }
+  }
 }
 
 /**
@@ -116,6 +162,7 @@ export function mapFieldTypeToMockValue(field: FieldConfig, i: number) {
     case FieldType.CHECKBOX:
       return true
     case FieldType.FILE:
+    case FieldType.FILE_WITH_OPTIONS:
       return null
   }
 }
@@ -154,6 +201,17 @@ export const isFileFieldType = (field: {
 }): field is { value: FileFieldValue; config: File } => {
   // @TODO?
   return field.config.type === FieldType.FILE
+}
+
+export const isFileFieldWithOptionType = (field: {
+  config: FieldConfig
+  value: FieldValue
+}): field is {
+  value: FileFieldWithOptionValue
+  config: FileUploadWithOptions
+} => {
+  // @TODO? (same as FILE?)
+  return field.config.type === FieldType.FILE_WITH_OPTIONS
 }
 
 export const isBulletListFieldType = (field: {

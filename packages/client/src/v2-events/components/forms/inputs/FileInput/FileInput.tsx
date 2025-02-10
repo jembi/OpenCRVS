@@ -22,6 +22,7 @@ function FileInput(
     value: FileFieldValue | undefined
     onChange: (value?: FileFieldValue) => void
     error?: boolean
+    label?: string
   }
 ) {
   const { value, onChange, name, description, allowedDocType } = props
@@ -50,7 +51,7 @@ function FileInput(
       description={description}
       error={''}
       file={file}
-      label={file?.originalFilename}
+      label={props.label ?? file?.originalFilename}
       name={name}
       onComplete={(newFile) => {
         if (newFile) {

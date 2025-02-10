@@ -28,12 +28,11 @@ import { Errors, getValidationErrorsForForm } from './validation'
 
 import {
   ActionFormData,
-  AddressFieldValue,
-  CheckboxFieldValue,
   FieldConfig,
   FieldType,
   FieldValue,
   FileFieldValue,
+  FileFieldWithOptionValue,
   isAddressFieldType,
   isBulletListFieldType,
   isCheckboxFieldType,
@@ -41,6 +40,7 @@ import {
   isDateFieldType,
   isDividerFieldType,
   isFileFieldType,
+  isFileFieldWithOptionType,
   isLocationFieldType,
   isPageHeaderFieldType,
   isParagraphFieldType,
@@ -80,6 +80,7 @@ import { SubHeader } from '@opencrvs/components'
 import { formatISO } from 'date-fns'
 import { Divider } from '@opencrvs/components'
 import { Address } from '@client/v2-events/features/events/registered-fields/Address'
+import { DocumentUploaderWithOption } from './inputs/FileInput/DocumentUploaderWithOption'
 
 const fadeIn = keyframes`
   from { opacity: 0; }
@@ -171,6 +172,12 @@ const GeneratedInputField = React.memo(
       [fieldDefinition.id, setFieldValue]
     )
 
+    const handleFileWithOptionChange = React.useCallback(
+      (value: FileFieldWithOptionValue | undefined) =>
+        setFieldValue(fieldDefinition.id, value),
+      [fieldDefinition.id, setFieldValue]
+    )
+
     /**
      * Combines the field definition with the current value and input field props
      * USED FOR: rendering the correct input field based on the FieldConfig guards
@@ -249,6 +256,7 @@ const GeneratedInputField = React.memo(
             {...inputProps}
             value={value}
             onChange={handleFileChange}
+            fullWidth={field.config.options?.fullWidth}
           />
         </InputField>
       )
@@ -344,6 +352,18 @@ const GeneratedInputField = React.memo(
     }
     if (isDividerFieldType(field)) {
       return <Divider />
+    }
+    if (isFileFieldWithOptionType(field)) {
+      return (
+        <InputField {...inputFieldProps}>
+          <DocumentUploaderWithOption
+            {...inputProps}
+            value={field.value ?? []}
+            onChange={handleFileWithOptionChange}
+            options={field.config.options}
+          />
+        </InputField>
+      )
     }
 
     throw new Error(`Unsupported field ${JSON.stringify(fieldDefinition)}`)

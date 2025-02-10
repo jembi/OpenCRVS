@@ -21,12 +21,12 @@ import {
   RouterProvider
 } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
-import { Page } from '../src/components/Page'
-import { I18nContainer } from '../src/i18n/components/I18nContainer'
-import { createStore } from '../src/store'
-import { useApolloClient } from '../src/utils/apolloClient'
-import { ApolloProvider } from '../src/utils/ApolloProvider'
-import { TRPCProvider } from '../src/v2-events/trpc'
+import { Page } from '@client/components/Page'
+import { I18nContainer } from '@client/i18n/components/I18nContainer'
+import { createStore } from '@client/store'
+import { useApolloClient } from '@client/utils/apolloClient'
+import { ApolloProvider } from '@client/utils/ApolloProvider'
+import { TRPCProvider } from '@client/v2-events/trpc'
 import { handlers } from './default-request-handlers'
 import WebFont from 'webfontloader'
 WebFont.load({

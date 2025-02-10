@@ -35,6 +35,7 @@ import { getLocations } from '@client/offline/selectors'
 import { withSuspense } from '@client/v2-events/components/withSuspense'
 import { getUserIdsFromActions } from '@client/v2-events/utils'
 import { useFormDataStringifier } from '@client/v2-events/hooks/useFormDataStringifier'
+import { cacheFiles } from '@client/v2-events/features/files/cache'
 import { EventHistory } from './components/EventHistory'
 import { EventSummary } from './components/EventSummary'
 
@@ -57,6 +58,8 @@ function EventOverviewContainer() {
   const event = events.find((e) => e.id === params.eventId)
 
   const config = configs.find((c) => c.id === event?.type)
+
+  event && config && cacheFiles(event.data, config)
 
   const userIds = getUserIdsFromActions(fullEvent.actions)
   const [users] = getUsers.useSuspenseQuery(userIds)

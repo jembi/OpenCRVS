@@ -20,17 +20,17 @@ import { ErrorText } from '@opencrvs/components/lib/ErrorText'
 import { ImageUploader } from '@opencrvs/components/lib/ImageUploader'
 import { buttonMessages, formMessages as messages } from '@client/i18n/messages'
 import { DocumentPreview } from './DocumentPreview'
-import { DocumentListPreview } from './DocumentListPreview'
+import { SingleDocumentPreview } from './SingleDocumentPreview'
 
-const DocumentUploader = styled(ImageUploader)`
+const DocumentUploader = styled(ImageUploader)<{ fullWidth?: boolean }>`
   color: ${({ theme }) => theme.colors.primary};
   background: ${({ theme }) => theme.colors.white};
   border: ${({ theme }) => `2px solid ${theme.colors.primary}`};
   border-radius: 4px;
   ${({ theme }) => theme.fonts.bold14};
-  height: 40px;
+  height: 46px;
   text-transform: initial;
-
+  width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
   @media (max-width: ${({ theme }) => theme.grid.breakpoints.md}px) {
     margin-left: 0px;
     margin-top: 10px;
@@ -47,6 +47,7 @@ type IFullProps = {
   label?: string
   file?: FileFieldValue
   description?: string
+  fullWidth?: boolean
   allowedDocType?: string[]
   error?: string
   disableDeleteInPreview?: boolean
@@ -55,6 +56,7 @@ type IFullProps = {
   onUploadingStateChanged?: (isUploading: boolean) => void
   requiredErrorMessage?: MessageDescriptor
   previewTransformer?: (files: FileFieldValue) => FileFieldValue
+  onlyButton?: boolean
 } & IntlShapeProps
 
 function SimpleDocumentUploaderComponent({
@@ -70,7 +72,9 @@ function SimpleDocumentUploaderComponent({
   error: errorProps,
   disableDeleteInPreview,
   requiredErrorMessage,
-  touched
+  touched,
+  fullWidth,
+  onlyButton
 }: IFullProps) {
   const [error, setError] = useState('')
   const [previewImage, setPreviewImage] = useState<FileFieldValue | null>(null)
@@ -108,6 +112,19 @@ function SimpleDocumentUploaderComponent({
     }
   }
 
+  if (onlyButton) {
+    return (
+      <DocumentUploader
+        disabled={Boolean(error)}
+        id={name}
+        name={name}
+        onChange={error ? undefined : handleFileChange}
+      >
+        {intl.formatMessage(messages.uploadFile)}
+      </DocumentUploader>
+    )
+  }
+
   function selectForPreview(selectedPreviewImage: FieldValue) {
     if (previewTransformer) {
       return setPreviewImage(
@@ -131,14 +148,13 @@ function SimpleDocumentUploaderComponent({
     error ||
     errorProps ||
     ''
-
   return (
     <>
       {description && <FieldDescription>{description}</FieldDescription>}
       {errorMessage && (touched || error) && (
         <ErrorText id="field-error">{errorMessage}</ErrorText>
       )}
-      <DocumentListPreview
+      <SingleDocumentPreview
         attachment={file}
         label={label}
         onDelete={onDelete}
@@ -155,7 +171,8 @@ function SimpleDocumentUploaderComponent({
       )}
       {!file && (
         <DocumentUploader
-          id="upload_document"
+          fullWidth={fullWidth}
+          id={name}
           name={name}
           onChange={handleFileChange}
         >

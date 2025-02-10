@@ -22,7 +22,7 @@ import sendVerifyCodeHandler, {
   responseSchema
 } from '@gateway/routes/verifyCode/handler'
 import { trpcProxy } from '@gateway/v2-events/event-config/routes'
-import { DOCUMENTS_URL } from '@gateway/constants'
+import { DOCUMENTS_URL, MINIO_BUCKET } from '@gateway/constants'
 
 export const getRoutes = () => {
   const routes: ServerRoute[] = [
@@ -98,6 +98,16 @@ export const getRoutes = () => {
           output: 'data',
           parse: false
         }
+      }
+    },
+    {
+      method: 'GET',
+      path: '/presigned-url/{fileUri*}',
+      handler: async (req, h) => {
+        return h.proxy({
+          uri: `${DOCUMENTS_URL}/presigned-url/${MINIO_BUCKET}/${req.params.fileUri}`,
+          passThrough: true
+        })
       }
     },
     {

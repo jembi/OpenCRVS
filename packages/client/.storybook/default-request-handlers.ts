@@ -21,6 +21,7 @@ import {
   tennisClubMembershipEventIndex
 } from '../src/v2-events/features/events/fixtures'
 import { tennisClubMembershipCertifiedCertificateTemplate } from './tennisClubMembershipCertifiedCertificateTemplate'
+import { birthEvent } from '@client/v2-events/components/forms/inputs/FileInput/fixtures'
 
 const tRPCMsw = createTRPCMsw<AppRouter>({
   links: [
@@ -34,7 +35,7 @@ const tRPCMsw = createTRPCMsw<AppRouter>({
 export const handlers = {
   events: [
     tRPCMsw.event.config.get.query(() => {
-      return [tennisClubMembershipEvent]
+      return [tennisClubMembershipEvent, birthEvent]
     }),
     tRPCMsw.event.list.query(() => {
       return [tennisClubMembershipEventIndex]
