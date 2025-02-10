@@ -15,6 +15,7 @@ import { DeclarationIcon, Cross } from '../icons'
 import { ToggleMenu } from '../ToggleMenu'
 import { Button } from '../Button'
 import { Icon } from '../Icon'
+import { Text } from '../Text'
 
 const TopBar = styled.div`
   padding: 0 ${({ theme }) => theme.grid.margin}px;
@@ -29,10 +30,8 @@ const TopBar = styled.div`
   position: sticky;
   z-index: 1;
 `
-const TopBarTitle = styled.h4`
-  ${({ theme }) => theme.fonts.h4};
+const TopBarTitle = styled(Text)`
   padding-left: 16px;
-  color: ${({ theme }) => theme.colors.copy};
 `
 
 const ActionContainer = styled.span`
@@ -90,7 +89,9 @@ export const EventTopBar = (props: IEventTopBarProps) => {
     <TopBar className={className}>
       <TitleContainer>
         {pageIcon || <DeclarationIcon color={iconColor} />}
-        <TopBarTitle>{title}</TopBarTitle>
+        <TopBarTitle variant="h4" color="copy" element="h4">
+          {title}
+        </TopBarTitle>
       </TitleContainer>
       <ActionContainer>
         {topBarActions && (

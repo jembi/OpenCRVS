@@ -11,6 +11,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { Link } from '../Link'
+import { Text } from '@opencrvs/components/src/Text'
 
 const Container = styled.div`
   display: flex;
@@ -56,11 +57,10 @@ const Value = styled.div`
   }
 `
 
-const PlaceHolder = styled.div`
-  ${({ theme }) => theme.fonts.reg16};
-  color: ${({ theme }) => theme.colors.supportingCopy};
+const PlaceHolder = styled(Text)`
   flex: 1;
 `
+
 const Action = styled.div`
   width: auto;
 `
@@ -95,7 +95,14 @@ export const DataRow = ({
           <Label id={`${id}_label`}>{label}</Label>
           {value && <Value id={`${id}_value`}>{value}</Value>}
           {placeHolder && (
-            <PlaceHolder id={`${id}_placeholder`}>{placeHolder}</PlaceHolder>
+            <PlaceHolder
+              id={`${id}_placeholder`}
+              variant="reg16"
+              color="supportingCopy"
+              element="span"
+            >
+              {placeHolder}
+            </PlaceHolder>
           )}
         </DataContainer>
         {action && (

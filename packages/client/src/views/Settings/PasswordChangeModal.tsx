@@ -26,6 +26,7 @@ import { Mutation } from '@apollo/client/react/components'
 import { injectIntl, WrappedComponentProps as IntlShapeProps } from 'react-intl'
 import { connect } from 'react-redux'
 import { UserDetails } from '@client/utils/userUtils'
+import { Text } from '@opencrvs/components/lib/Text'
 
 const Message = styled.div`
   margin-bottom: 16px;
@@ -76,16 +77,14 @@ const ValidationRulesSectionLg = styled.div`
     display: none;
   }
 `
-const PasswordMatch = styled.div`
-  ${({ theme }) => theme.fonts.bold16};
-  color: ${({ theme }) => theme.colors.positive};
+const PasswordMatch = styled(Text)`
   margin-top: 8px;
 `
-const PasswordMismatch = styled.div`
-  ${({ theme }) => theme.fonts.bold16};
-  color: ${({ theme }) => theme.colors.negative};
+
+const PasswordMismatch = styled(Text)`
   margin-top: 8px;
 `
+
 const Row = styled.div`
   display: flex;
   @media (max-width: ${({ theme }) => theme.grid.breakpoints.lg}px) {
@@ -381,12 +380,22 @@ class PasswordChangeModalComp extends React.Component<IFullProps, State> {
                   />
                 </InputField>
                 {this.state.passwordMismatched && (
-                  <PasswordMismatch id="passwordMismatch">
+                  <PasswordMismatch
+                    id="passwordMismatch"
+                    variant="bold16"
+                    color="negative"
+                    element="span"
+                  >
                     {intl.formatMessage(messages.mismatchedPasswordMsg)}
                   </PasswordMismatch>
                 )}
                 {this.state.passwordMatched && (
-                  <PasswordMatch id="passwordMatch">
+                  <PasswordMatch
+                    id="passwordMatch"
+                    variant="bold16"
+                    color="positive"
+                    element="span"
+                  >
                     {intl.formatMessage(messages.matchedPasswordMsg)}
                   </PasswordMatch>
                 )}

@@ -65,6 +65,8 @@ import { SearchUsersQuery } from '@client/utils/gateway'
 import { UserDetails } from '@client/utils/userUtils'
 import { Link } from '@opencrvs/components'
 import { getLocalizedLocationName } from '@client/utils/locationUtils'
+import { HOME } from '@client/navigation/routes'
+import { Text as StyledText } from '@opencrvs/components'
 import { usePermissions } from '@client/hooks/useAuthorization'
 import * as routes from '@client/navigation/routes'
 import { UserSection } from '@client/forms'
@@ -104,9 +106,7 @@ const Loading = styled.div`
   }
 `
 
-const Header = styled.h1`
-  color: ${({ theme }) => theme.colors.copy};
-  ${({ theme }) => theme.fonts.h2};
+const Header = styled(StyledText)`
   margin: 8px 0;
   @media (min-width: ${({ theme }) => theme.grid.breakpoints.lg}px) {
     display: none;
@@ -122,16 +122,11 @@ const LocationInfoValue = styled.div`
   ${({ theme }) => theme.fonts.reg18};
 `
 
-const Value = styled.span`
-  color: ${({ theme }) => theme.colors.grey500};
-  ${({ theme }) => theme.fonts.reg16}
-`
+const Value = styled(StyledText)``
 
-const NoRecord = styled.div<{ isFullPage?: boolean }>`
-  ${({ theme }) => theme.fonts.h3};
+const NoRecord = styled(StyledText)<{ isFullPage?: boolean }>`
   text-align: left;
   margin-left: ${({ isFullPage }) => (isFullPage ? `40px` : `10px`)};
-  color: ${({ theme }) => theme.colors.copy};
   margin-top: 20px;
 `
 
@@ -148,8 +143,7 @@ const ConnectivityContainer = styled.div`
 const NoConnectivity = styled(NoWifi)`
   width: 24px;
 `
-const Text = styled.div`
-  ${({ theme }) => theme.fonts.reg16};
+const Text = styled(StyledText)`
   text-align: center;
 `
 const LinkButtonModified = styled(LinkButton)`
@@ -531,7 +525,11 @@ function UserListComponent(props: IProps) {
                 {name}
               </Link>
             ),
-            value: <Value>{role}</Value>,
+            value: (
+              <Value variant="h4" element="p">
+                {role}
+              </Value>
+            ),
             actions: (
               <StatusMenu
                 userDetails={userDetails}
@@ -637,7 +635,7 @@ function UserListComponent(props: IProps) {
         <>
           <UserTable id="user_list">
             {userContent.length <= 0 ? (
-              <NoRecord id="no-record">
+              <NoRecord id="no-record" variant="h3" color="copy" element="h3">
                 {intl.formatMessage(constantsMessages.noResults)}
               </NoRecord>
             ) : (
@@ -841,7 +839,7 @@ function UserListComponent(props: IProps) {
                   </Loading>
                 ) : data ? (
                   <>
-                    <Header id="header">
+                    <Header id="header" variant="h2" color="copy" element="h2">
                       {(searchedLocation &&
                         getLocalizedLocationName(intl, searchedLocation)) ||
                         ''}
@@ -874,7 +872,7 @@ function UserListComponent(props: IProps) {
         >
           <ConnectivityContainer>
             <NoConnectivity />
-            <Text id="no-connection-text">
+            <Text id="no-connection-text" variant="reg16" element="span">
               {intl.formatMessage(constantsMessages.noConnection)}
             </Text>
           </ConnectivityContainer>

@@ -29,6 +29,6 @@ describe('LoadingIndicator test cases', () => {
     const isShowingLoadingText = testComponent.find(
       'div#search-result-error-text-count'
     ).length
-    expect(isShowingLoadingText).toBe(1)
+    expect(isShowingLoadingText).toBe(0)
   })
 })

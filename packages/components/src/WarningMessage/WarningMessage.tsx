@@ -11,6 +11,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { Warning } from '../icons'
+import { Text } from '@opencrvs/components/src/Text'
 
 interface IWarningProps {
   children: string
@@ -30,16 +31,16 @@ const Container = styled.div<{ ignoreMediaQuery?: boolean }>`
       : ''
   }}
 `
-const StyledParagraph = styled.div`
-  ${({ theme }) => theme.fonts.bold16};
-`
+const StyledParagraph = styled(Text)``
 
 /** @deprecated in favor of `<ErrorText>` */
 export function WarningMessage(props: IWarningProps) {
   return (
     <Container ignoreMediaQuery={props.ignoreMediaQuery}>
       <Warning />
-      <StyledParagraph>{props.children}</StyledParagraph>
+      <StyledParagraph variant="bold16" element="span">
+        {props.children}
+      </StyledParagraph>
     </Container>
   )
 }

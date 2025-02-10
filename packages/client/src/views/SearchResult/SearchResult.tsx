@@ -70,13 +70,12 @@ import {
 import { LoadingIndicator } from '@client/views/OfficeHome/LoadingIndicator'
 import { WQContentWrapper } from '@client/views/OfficeHome/WQContentWrapper'
 import { SearchCriteria } from '@client/utils/referenceApi'
+import { Text } from '@opencrvs/components'
 import { useWindowSize } from '@opencrvs/components/src/hooks'
 import * as routes from '@client/navigation/routes'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-const ErrorText = styled.div`
-  color: ${({ theme }) => theme.colors.negative};
-  ${({ theme }) => theme.fonts.reg16};
+const ErrorText = styled(Text)`
   text-align: center;
   margin-top: 100px;
 `
@@ -502,7 +501,11 @@ function SearchResultView(props: ISearchResultProps) {
                     <LoadingIndicator loading={true} />
                   </div>
                 ) : error ? (
-                  <ErrorText id="search-result-error-text">
+                  <ErrorText
+                    id="search-result-error-text"
+                    element="p"
+                    variant="h4"
+                  >
                     {intl.formatMessage(errorMessages.queryError)}
                   </ErrorText>
                 ) : (

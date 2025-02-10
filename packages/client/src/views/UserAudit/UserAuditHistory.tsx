@@ -70,10 +70,8 @@ const AuditContent = styled.div`
   color: ${({ theme }) => theme.colors.grey600};
 `
 
-const BoldContent = styled.div`
-  color: ${({ theme }) => theme.colors.grey600};
-  ${({ theme }) => theme.fonts.bold14};
-`
+const BoldContent = styled(Text)``
+
 interface IBaseProp {
   practitionerId: string
   practitionerName: string | null | undefined
@@ -248,7 +246,9 @@ function UserAuditHistoryComponent(props: Props) {
             {actionMessage}
           </Link>
         ) : (
-          <BoldContent>{actionMessage}</BoldContent>
+          <BoldContent element="p" variant="h3">
+            {actionMessage}
+          </BoldContent>
         ),
 
         actionDescriptionWithAuditTime:
@@ -269,7 +269,9 @@ function UserAuditHistoryComponent(props: Props) {
               {actionMessage}
             </Link>
           ) : (
-            <BoldContent>{actionMessage}</BoldContent>
+            <BoldContent variant="bold14" color="grey600" element="span">
+              {actionMessage}
+            </BoldContent>
           ),
         trackingId:
           isUserAuditItemWithDeclarationDetials(userAuditItem) &&

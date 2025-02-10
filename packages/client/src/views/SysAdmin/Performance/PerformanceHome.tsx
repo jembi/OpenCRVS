@@ -77,6 +77,7 @@ import { ICurrency } from '@client/utils/referenceApi'
 import { Box } from '@opencrvs/components/lib/Box'
 import startOfMonth from 'date-fns/startOfMonth'
 import { UserDetails } from '@client/utils/userUtils'
+import { Text as StyledText } from '@opencrvs/components'
 
 const Layout = styled.div`
   display: flex;
@@ -171,10 +172,10 @@ const NoConnectivity = styled(NoWifi)`
   width: 24px;
 `
 
-const Text = styled.div`
-  ${({ theme }) => theme.fonts.reg16};
+const Text = styled(StyledText)`
   text-align: center;
 `
+
 interface IConnectProps {
   locations: { [key: string]: ILocation }
   offices: { [key: string]: ILocation }
@@ -584,7 +585,7 @@ const PerformanceHomeComponent = (props: Props) => {
             ) : (
               <ConnectivityContainer>
                 <NoConnectivity />
-                <Text id="no-connection-text">
+                <Text id="no-connection-text" variant="reg16" element="span">
                   {intl.formatMessage(constantsMessages.noConnection)}
                 </Text>
               </ConnectivityContainer>

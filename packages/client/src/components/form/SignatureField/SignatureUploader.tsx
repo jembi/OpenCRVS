@@ -31,6 +31,7 @@ import styled from 'styled-components'
 import SignatureCanvas from 'react-signature-canvas'
 import { EMPTY_STRING } from '@client/utils/constants'
 import { ISignatureFormField } from '@client/forms'
+import { Text } from '@opencrvs/components/lib/Text'
 
 const SignatureContainer = styled.div`
   border: 2px solid ${({ theme }) => theme.colors.grey600};
@@ -46,13 +47,9 @@ const SignaturePreview = styled.img`
   max-width: 50%;
   display: block;
 `
-
-const SignatureDescription = styled.p`
+const SignatureDescription = styled(Text)`
   margin-top: 0;
-  ${({ theme }) => theme.fonts.reg16};
-  color: ${({ theme }) => theme.colors.grey500};
 `
-
 export type SignatureUploaderProps = Omit<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   'onChange' | 'value'
@@ -184,7 +181,7 @@ export function SignatureUploader({
         ]}
         handleClose={() => setSignatureDialogOpen(false)}
       >
-        <SignatureDescription>
+        <SignatureDescription variant="reg16" color="grey500" element="p">
           {intl.formatMessage(messages.signatureInputDescription)}
         </SignatureDescription>
         <SignCanvas value={signatureData} onChange={setSignatureValue} />

@@ -11,6 +11,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
+import { Text } from '@opencrvs/components/lib/Text'
 import {
   injectIntl,
   WrappedComponentProps as IntlShapeProps,
@@ -31,15 +32,11 @@ import { buttonMessages } from '@client/i18n/messages'
 import { useNavigate } from 'react-router-dom'
 import * as routes from '@client/navigation/routes'
 
-const UserName = styled.div`
-  color: ${({ theme }) => theme.colors.copy};
-  ${({ theme }) => theme.fonts.h4};
+const UserName = styled(Text)`
   margin-bottom: 6px;
 `
 
-const UserRole = styled.div`
-  color: ${({ theme }) => theme.colors.supportingCopy};
-  ${({ theme }) => theme.fonts.reg14};
+const UserRole = styled(Text)`
   margin-bottom: 6px;
 `
 
@@ -99,8 +96,10 @@ const ProfileMenuComponent = ({
 
     return (
       <>
-        <UserName>{userName}</UserName>
-        <UserRole>
+        <UserName element="p" variant="h4">
+          {userName}
+        </UserName>
+        <UserRole element="p" variant="h4">
           {userDetails && intl.formatMessage(userDetails.role.label)}
         </UserRole>
       </>

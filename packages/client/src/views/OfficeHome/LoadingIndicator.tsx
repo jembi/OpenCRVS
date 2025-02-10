@@ -15,10 +15,9 @@ import { injectIntl, WrappedComponentProps as IntlShapeProps } from 'react-intl'
 import styled from 'styled-components'
 import { errorMessages, constantsMessages } from '@client/i18n/messages'
 import { useOnlineStatus } from '@client/utils'
+import { Text as StyledText } from '@opencrvs/components/lib/Text'
 
-const ErrorText = styled.div`
-  color: ${({ theme }) => theme.colors.negative};
-  ${({ theme }) => theme.fonts.reg16};
+const ErrorText = styled(StyledText)`
   text-align: center;
   margin-top: 100px;
 `
@@ -49,8 +48,7 @@ const LoadingContainer = styled.div`
     justify-content: center;
   }
 `
-const Text = styled.div`
-  ${({ theme }) => theme.fonts.reg16};
+const Text = styled(StyledText)`
   text-align: center;
 `
 
@@ -89,14 +87,19 @@ const LoadingIndicatorComp = ({
     )}
     <MobileViewContainer noDeclaration={noDeclaration}>
       {isOnline && hasError && (
-        <ErrorText id="search-result-error-text-count">
+        <ErrorText
+          id="search-result-error-text-count"
+          variant="reg16"
+          color="negative"
+          element="span"
+        >
           {intl.formatMessage(errorMessages.queryError)}
         </ErrorText>
       )}
       {!isOnline && (
         <ConnectivityContainer>
           <NoConnectivity />
-          <Text id="wait-connection-text">
+          <Text id="wait-connection-text" variant="reg16" element="span">
             {intl.formatMessage(constantsMessages.noConnection)}
           </Text>
         </ConnectivityContainer>

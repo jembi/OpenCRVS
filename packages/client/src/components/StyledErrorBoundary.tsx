@@ -12,6 +12,7 @@ import React, { useState } from 'react'
 // eslint-disable-next-line no-restricted-imports
 import * as Sentry from '@sentry/react'
 import styled from 'styled-components'
+import { Text } from '@opencrvs/components/lib/Text'
 import { injectIntl, WrappedComponentProps as IntlShapeProps } from 'react-intl'
 import { PageWrapper } from '@opencrvs/components/lib/PageWrapper'
 import { TertiaryButton } from '@opencrvs/components/lib/buttons'
@@ -25,15 +26,11 @@ const ErrorContainer = styled(Box)`
   align-items: center;
   margin-top: -80px;
 `
-const ErrorTitle = styled.h1`
-  ${({ theme }) => theme.fonts.h1};
-  color: ${({ theme }) => theme.colors.copy};
+const ErrorTitle = styled(Text)`
   margin-bottom: 16px;
 `
 
-const ErrorMessage = styled.div`
-  ${({ theme }) => theme.fonts.reg18};
-  color: ${({ theme }) => theme.colors.copy};
+const ErrorMessage = styled(Text)`
   margin-bottom: 32px;
 `
 
@@ -61,14 +58,14 @@ const StyledErrorBoundaryComponent = ({ intl, children }: IFullProps) => {
       fallback={
         <PageWrapper>
           <ErrorContainer>
-            <ErrorTitle>
+            <ErrorTitle variant="h1" color="copy" element="span">
               {authError &&
                 intl.formatMessage(errorMessages.errorCodeUnauthorized)}
               {authError
                 ? intl.formatMessage(errorMessages.errorTitleUnauthorized)
                 : intl.formatMessage(errorMessages.errorTitle)}
             </ErrorTitle>
-            <ErrorMessage>
+            <ErrorMessage variant="reg18" color="copy" element="span">
               {intl.formatMessage(errorMessages.unknownErrorDescription)}
             </ErrorMessage>
             <TertiaryButton

@@ -17,6 +17,7 @@ import {
   ColumnContentAlignment
 } from '../Workqueue'
 import { Pagination } from '../Pagination'
+import { Text } from '@opencrvs/components/src/Text'
 
 const Wrapper = styled.div<{
   fixedWidth: number | undefined
@@ -163,12 +164,11 @@ const ValueWrapper = styled.span<{
 const Error = styled.span`
   color: ${({ theme }) => theme.colors.negative};
 `
-const ErrorText = styled.div<{ isFullPage?: boolean }>`
-  ${({ theme }) => theme.fonts.h3};
+const ErrorText = styled(Text)<{ isFullPage?: boolean }>`
   text-align: left;
   margin-left: ${({ isFullPage }) => (isFullPage ? `40px` : `10px`)};
-  color: ${({ theme }) => theme.colors.copy};
 `
+
 export const LoadingTableGrey = styled.span<{
   width?: number
 }>`
@@ -447,7 +447,13 @@ export const Table = ({
             )}
           </TableScrollerHorizontal>
           {content.length <= 0 && noResultText && (
-            <ErrorText id="no-record" isFullPage={isFullPage}>
+            <ErrorText
+              id="no-record"
+              isFullPage={isFullPage}
+              variant="h3"
+              color="copy"
+              element="h3"
+            >
               {noResultText}
             </ErrorText>
           )}

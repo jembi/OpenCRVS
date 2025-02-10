@@ -12,6 +12,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { CountryLogo } from '@opencrvs/components/lib/icons'
 import { Stack } from '@opencrvs/components/lib/Stack'
+import { Text } from '@opencrvs/components'
 
 interface IReviewHeaderProps {
   id?: string
@@ -34,15 +35,14 @@ const HeaderContent = styled.div`
   color: ${({ theme }) => theme.colors.copy};
 `
 
-const TitleContainer = styled.div`
-  ${({ theme }) => theme.fonts.bold14}
-  color: ${({ theme }) => theme.colors.supportingCopy};
+const TitleContainer = styled(Text)`
   text-transform: uppercase;
 `
-const SubjectContainer = styled.div`
-  ${({ theme }) => theme.fonts.h2}
+
+const SubjectContainer = styled(Text)`
   overflow-wrap: anywhere;
 `
+
 export const ReviewHeader = (props: IReviewHeaderProps) => {
   const { id, logoSource, title, subject } = props
 
@@ -56,9 +56,20 @@ export const ReviewHeader = (props: IReviewHeaderProps) => {
           justify-content="flex-start"
           gap={6}
         >
-          {title && <TitleContainer id={`${id}_title`}>{title}</TitleContainer>}
+          {title && (
+            <TitleContainer
+              id={`${id}_title`}
+              variant="bold14"
+              color="supportingCopy"
+              element="span"
+            >
+              {title}
+            </TitleContainer>
+          )}
           {subject && (
-            <SubjectContainer id={`${id}_subject`}>{subject}</SubjectContainer>
+            <SubjectContainer id={`${id}_subject`} variant="h2" element="h2">
+              {subject}
+            </SubjectContainer>
           )}
         </Stack>
       </HeaderContent>

@@ -18,6 +18,7 @@ import styled, { withTheme } from 'styled-components'
 import { CompletenessRateTime } from '@client/views/SysAdmin/Performance/utils'
 import { messages } from '@client/i18n/messages/views/performance'
 import type { LegendProps } from 'recharts'
+import { Text } from '@opencrvs/components'
 import { CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart'
 
 interface IProps extends WrappedComponentProps {
@@ -37,10 +38,9 @@ const CustomLegendContainer = styled.div<{
   color: ${({ theme }) => theme.colors.copy};
 `
 
-const LegendHeader = styled.div`
+const LegendHeader = styled(Text)`
   padding-bottom: 8px;
   margin-bottom: 8px;
-  ${({ theme }) => theme.fonts.bold16};
 `
 
 const LegendDetails = styled.div`
@@ -48,12 +48,9 @@ const LegendDetails = styled.div`
   flex-direction: row;
 `
 
-const LegendDataLabel = styled.span`
-  ${({ theme }) => theme.fonts.reg14}
-`
-const LegendDataValue = styled.span`
-  ${({ theme }) => theme.fonts.h4}
-`
+const LegendDataLabel = styled(Text)``
+
+const LegendDataValue = styled(Text)``
 
 const LegendData = styled.div`
   padding: 0 8px;
@@ -230,20 +227,22 @@ const RegRatesLineChartComponent = (props: IProps) => {
         marginLeft={legendMarginLeft}
         marginTop={legendMarginTop}
       >
-        <LegendHeader>{activeLabel}</LegendHeader>
+        <LegendHeader variant="bold16" element="span">
+          {activeLabel}
+        </LegendHeader>
         <LegendDetails>
           <div>
             <LegendDot color={activeTotalEstimate.stroke} />
           </div>
           <LegendData>
-            <LegendDataLabel>
+            <LegendDataLabel variant="reg14" element="span">
               {intl.formatMessage(constantsMessages.estimatedNumberOfEvents, {
                 eventType,
                 lineBreak: <span key={'estimated-space'}>&nbsp;</span>
               })}
             </LegendDataLabel>
             <br />
-            <LegendDataValue>
+            <LegendDataValue variant="h4" element="span">
               {activeTotalEstimate.value < 10
                 ? activeTotalEstimate.value.toFixed(2)
                 : Math.round(activeTotalEstimate.value)}
@@ -255,13 +254,15 @@ const RegRatesLineChartComponent = (props: IProps) => {
             <LegendDot color={activeTotalRegistered.stroke} />
           </div>
           <LegendData>
-            <LegendDataLabel>
+            <LegendDataLabel variant="reg14" element="span">
               {intl.formatMessage(constantsMessages.totalRegistered, {
                 lineBreak: <span key={'totalRegistered-break'}>&nbsp;</span>
               })}
             </LegendDataLabel>
             <br />
-            <LegendDataValue>{activeTotalRegistered.value}</LegendDataValue>
+            <LegendDataValue variant="h4" element="span">
+              {activeTotalRegistered.value}
+            </LegendDataValue>
           </LegendData>
         </LegendDetails>
         <LegendDetails>
@@ -269,7 +270,7 @@ const RegRatesLineChartComponent = (props: IProps) => {
             <LegendDot color={activeRegisteredInTargetDays.stroke} />
           </div>
           <LegendData>
-            <LegendDataLabel>
+            <LegendDataLabel variant="reg14" element="span">
               {completenessRateTime === CompletenessRateTime.Within5Years
                 ? intl.formatMessage(messages.performanceWithin5YearsLabel)
                 : completenessRateTime === CompletenessRateTime.Within1Year
@@ -286,7 +287,7 @@ const RegRatesLineChartComponent = (props: IProps) => {
                   )}
             </LegendDataLabel>
             <br />
-            <LegendDataValue>
+            <LegendDataValue variant="h4" element="span">
               {activeRegisteredInTargetDays.value}
             </LegendDataValue>
           </LegendData>
@@ -339,7 +340,7 @@ const RegRatesLineChartComponent = (props: IProps) => {
           marginLeft={legendMarginLeft}
           marginTop={legendMarginTop}
         >
-          <LegendHeader>
+          <LegendHeader variant="bold16" element="span">
             <LoaderBox width={40} />
           </LegendHeader>
           <LegendDetails>
@@ -357,11 +358,11 @@ const RegRatesLineChartComponent = (props: IProps) => {
               <LegendDot color={theme.colors.grey300} />
             </div>
             <LegendData>
-              <LegendDataLabel>
+              <LegendDataLabel variant="reg14" element="span">
                 <LoaderBox width={60} />
               </LegendDataLabel>
               <br />
-              <LegendDataValue>
+              <LegendDataValue variant="h4" element="span">
                 <LoaderBox width={20} />
               </LegendDataValue>
             </LegendData>
@@ -371,11 +372,11 @@ const RegRatesLineChartComponent = (props: IProps) => {
               <LegendDot color={theme.colors.grey300} />
             </div>
             <LegendData>
-              <LegendDataLabel>
+              <LegendDataLabel variant="reg14" element="span">
                 <LoaderBox width={60} />
               </LegendDataLabel>
               <br />
-              <LegendDataValue>
+              <LegendDataValue variant="h4" element="span">
                 <LoaderBox width={20} />
               </LegendDataValue>
             </LegendData>
@@ -394,7 +395,7 @@ const RegRatesLineChartComponent = (props: IProps) => {
           marginLeft={legendMarginLeft}
           marginTop={legendMarginTop}
         >
-          <LegendHeader>
+          <LegendHeader variant="bold16" element="span">
             <LoaderBox width={60} />
           </LegendHeader>
           <LegendDetails>
@@ -412,11 +413,11 @@ const RegRatesLineChartComponent = (props: IProps) => {
               <LegendDot color={theme.colors.grey300} />
             </div>
             <LegendData>
-              <LegendDataLabel>
+              <LegendDataLabel variant="reg14" element="span">
                 <LoaderBox width={80} />
               </LegendDataLabel>
               <br />
-              <LegendDataValue>
+              <LegendDataValue variant="h4" element="span">
                 <LoaderBox width={40} />
               </LegendDataValue>
             </LegendData>
@@ -426,11 +427,11 @@ const RegRatesLineChartComponent = (props: IProps) => {
               <LegendDot color={theme.colors.grey300} />
             </div>
             <LegendData>
-              <LegendDataLabel>
+              <LegendDataLabel variant="reg14" element="span">
                 <LoaderBox width={80} />
               </LegendDataLabel>
               <br />
-              <LegendDataValue>
+              <LegendDataValue variant="h4" element="span">
                 <LoaderBox width={40} />
               </LegendDataValue>
             </LegendData>

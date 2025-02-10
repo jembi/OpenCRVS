@@ -12,6 +12,7 @@ import * as React from 'react'
 import styled, { withTheme } from 'styled-components'
 import { IDataPoint, ICategoryDataPoint } from '../chart-datapoint-types'
 import { ITheme } from '../theme'
+import { Text } from '@opencrvs/components/src/Text'
 
 interface ILegendDataPoint extends IDataPoint {
   percentage: number
@@ -63,9 +64,7 @@ const DataLabel = styled.label`
   margin-top: 1em;
   margin-bottom: auto;
 `
-const DataTitle = styled.h3<{ description?: string }>`
-  ${({ theme }) => theme.fonts.reg18};
-  color: ${({ theme }) => theme.colors.secondary};
+const DataTitle = styled(Text)<{ description?: string }>`
   margin: ${({ description }) => (description ? `0` : `0 0 23px 0`)};
 
   @media (max-width: ${({ theme }) => theme.grid.breakpoints.md}px) {
@@ -73,9 +72,8 @@ const DataTitle = styled.h3<{ description?: string }>`
   }
 `
 
-const DataDescription = styled.span`
-  ${({ theme }) => theme.fonts.reg12};
-`
+const DataDescription = styled(Text)``
+
 const FooterContainer = styled.div`
   display: flex;
   border-top: 1px solid ${({ theme }) => theme.colors.background};
@@ -89,9 +87,7 @@ const FooterData = styled.div`
   ${({ theme }) => theme.fonts.reg16};
   color: ${({ theme }) => theme.colors.copy};
 `
-const FooterDataLabel = styled.span`
-  ${({ theme }) => theme.fonts.reg12};
-`
+const FooterDataLabel = styled(Text)``
 const FooterIconTitle = styled.div`
   margin-top: 5px;
   display: flex;
@@ -123,9 +119,18 @@ function LegendBody({ dataPoint }: { dataPoint: ILegendDataPoint }) {
 
   return (
     <DataLabel>
-      <DataTitle description={dataPoint.description}>{title}</DataTitle>
+      <DataTitle
+        description={dataPoint.description}
+        variant="reg18"
+        color="secondary"
+        element="span"
+      >
+        {title}
+      </DataTitle>
       {!dataPoint.total && dataPoint.description && (
-        <DataDescription>{dataPoint.description}</DataDescription>
+        <DataDescription variant="reg12" element="span">
+          {dataPoint.description}
+        </DataDescription>
       )}
     </DataLabel>
   )
@@ -152,7 +157,9 @@ function LegendFooter({
         }
         return (
           <FooterData key={i}>
-            <FooterDataLabel>{dataPoint.label}</FooterDataLabel>
+            <FooterDataLabel variant="reg12" element="span">
+              {dataPoint.label}
+            </FooterDataLabel>
             <FooterIconTitle>
               <FooterIcon>{dataPoint.icon()}</FooterIcon>
               {title}
