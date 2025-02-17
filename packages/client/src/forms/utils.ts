@@ -564,6 +564,7 @@ export const getConditionalActionsForField = (
   values: IFormSectionData,
   offlineCountryConfig: IOfflineData,
   draftData: IFormData,
+  draftId: string,
   userDetails: UserDetails | null
 ): string[] => {
   if (!field.conditionals) {
@@ -578,6 +579,7 @@ export const getConditionalActionsForField = (
           values,
           offlineCountryConfig,
           draftData,
+          draftId,
           userDetails
         )
       )
@@ -593,6 +595,7 @@ export const evalExpressionInFieldDefinition = (
   $form: IFormSectionData,
   $config: IOfflineData,
   $draft: IFormData,
+  $draftId: string,
   $user: (UserDetails & { token?: string }) | null
 ) => {
   // For backwards compatibility
@@ -600,6 +603,7 @@ export const evalExpressionInFieldDefinition = (
   const values = $form
   const offlineCountryConfig = $config
   const draftData = $draft
+  const draftId = $draftId
   const userDetails = $user
   /* eslint-enable @typescript-eslint/no-unused-vars */
 
