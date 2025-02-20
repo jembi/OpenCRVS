@@ -19,6 +19,22 @@ import { sortBy } from 'lodash'
 import ts from 'typescript'
 import { MessageDescriptor } from 'react-intl'
 
+const translate = async (text: string, targetLanguage: string) => {
+  try {
+    const baseUrl = 'https://translate.googleapis.com/translate_a/single'
+    const url = `${baseUrl}?client=gtx&sl=auto&tl=${targetLanguage}&dt=t&q=${encodeURIComponent(
+      text
+    )}`
+
+    const response = await fetch(url)
+    const result = await response.json()
+
+    return result[0][0][0]
+  } catch (error) {
+    return text
+  }
+}
+
 export async function writeJSONToCSV(
   filename: string,
   data: Array<Record<string, any>>
@@ -206,16 +222,24 @@ ${chalk.white(`${COUNTRY_CONFIG_PATH}/src/translations/login.csv`)}`)
         knownLanguages.map((lang) => [lang, ''])
       )
 
-      const defaultsToBeAdded = missingKeys.map(
-        (key): CSVRow => ({
-          id: key,
-          description: reactIntlDescriptions[key],
-          ...emptyLanguages,
-          en:
-            messagesParsedFromApp
-              .find(({ id }) => id === key)
-              ?.defaultMessage?.toString() || ''
-        })
+      const defaultsToBeAdded = await Promise.all(
+        missingKeys.map(
+          async (key): Promise<CSVRow> => ({
+            id: key,
+            description: reactIntlDescriptions[key],
+            ...emptyLanguages,
+            en:
+              messagesParsedFromApp
+                .find(({ id }) => id === key)
+                ?.defaultMessage?.toString() || '',
+            fr: await translate(
+              messagesParsedFromApp
+                .find(({ id }) => id === key)
+                ?.defaultMessage?.toString() || '',
+              'fr'
+            )
+          })
+        )
       )
 
       const allIds = Array.from(
