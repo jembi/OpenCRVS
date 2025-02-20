@@ -82,3 +82,23 @@ export const translationsMock = {
     }
   ]
 }
+
+export const emailUserMock = {
+  _id: '6798f378533ac9f3188f1de9',
+  name: [{ use: 'en', given: [Array], family: 'Campbell' }],
+  username: 'j.campbell',
+  email: '',
+  emailForNotification: 'kalushabwaly.a17@gmail.com',
+  mobile: '+260921111111',
+  passwordHash: '$2a$10$p4wMIAAIKTOfr60FiQc8I.ailfW5.L4wsG3fvCsezSyfplQsLkSX6',
+  salt: '$2a$10$p4wMIAAIKTOfr60FiQc8I.',
+  role: 'NATIONAL_SYSTEM_ADMIN',
+  practitionerId: '13940481-08e1-494d-a2a1-438f8de785b6',
+  primaryOfficeId: 'eda436df-99af-42d9-a6a2-cd6adf56483a',
+  status: 'active',
+  identifiers: [],
+  securityQuestionAnswers: [],
+  creationDate: 1738077048363,
+  auditHistory: [],
+  searches: []
+}

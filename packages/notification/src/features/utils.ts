@@ -27,6 +27,10 @@ import {
   RejectedRecord
 } from '@opencrvs/commons/types'
 import { badRequest as boomBadRequest } from '@hapi/boom'
+import * as Hapi from '@hapi/hapi'
+import { decode } from 'jsonwebtoken'
+import { USER_MANAGEMENT_URL } from '@notification/constants'
+import fetch from 'node-fetch'
 
 export function getContactPhoneNo(
   record: ReadyForReviewRecord | RegisteredRecord
@@ -89,7 +93,7 @@ export function getInformantName(
     record,
     resourceIdentifierToUUID(informantRelation.patient.reference)
   )
-  const name = informant.name.find(({ use }) => use === 'en')
+  const name = informant.name.find(({ use }: { use: string }) => use === 'en')
   if (!name) {
     error(record, 'name not found in informant patient resource')
   }
@@ -113,7 +117,7 @@ export function getPersonName(
     record,
     resourceIdentifierToUUID(patientSection.entry[0].reference)
   )
-  const name = person.name.find(({ use }) => use === 'en')
+  const name = person.name.find(({ use }: { use: string }) => use === 'en')
   if (!name) {
     error(record, `name not found in patient resource for ${compositionCode}`)
   }
@@ -131,4 +135,29 @@ export function getRegistrationLocation(
   const location = findLastOfficeLocationFromSavedBundle(record)
 
   return location.name || ''
+}
+
+export async function getUserDetails(request?: Hapi.Request) {
+  // get the logged user details
+  const token = request?.headers['authorization']?.split(' ')[1]
+
+  const decodedToken = token ? decode(token) : null
+  if (!decodedToken) {
+    throw new Error(`The user token is invalid or missing`)
+  }
+
+  const userId = decodedToken?.sub
+
+  const res = await fetch(`${USER_MANAGEMENT_URL}getUser`, {
+    method: 'POST',
+    body: JSON.stringify({ userId }),
+    headers: {
+      'Content-Type': 'application/json',
+      ...request?.headers
+    }
+  })
+
+  const userDetails = await res.json()
+
+  return userDetails
 }

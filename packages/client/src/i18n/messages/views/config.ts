@@ -92,7 +92,7 @@ const messagesToDefine = {
   emailAllUsersSubtitle: {
     id: 'config.emailAllUsers.subtitle',
     defaultMessage:
-      'This email will be sent to all users you are active. Emails will be sent over the next 24 hours. Only one email can be sent per day',
+      'This email will be sent to all users who are active. Emails will be sent over the next 24 hours. Only one email can be sent per day',
     description: 'Subtitle for email all users'
   },
   emailAllUsersModalTitle: {

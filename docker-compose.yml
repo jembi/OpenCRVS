@@ -234,6 +234,7 @@ services:
       - COUNTRY=${COUNTRY:-bgd}
       - HOST=0.0.0.0
       - COUNTRY_CONFIG_URL=http://countryconfig:3040
+      - USER_MANAGEMENT_URL=http://user-mgnt:3030/
   config:
     image: opencrvs/ocrvs-config:${VERSION}
     #platform: linux/amd64
