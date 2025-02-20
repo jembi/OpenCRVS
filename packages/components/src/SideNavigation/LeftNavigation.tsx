@@ -11,6 +11,7 @@
 
 import * as React from 'react'
 import styled from 'styled-components'
+import { Text } from '@opencrvs/components/src/Text'
 
 export interface ILeftNavigationProps {
   applicationName: string
@@ -50,12 +51,11 @@ const UserInfo = styled.div`
     display: none;
   }
 `
-const UserName = styled.p`
-  ${({ theme }) => theme.fonts.h4};
+const UserName = styled(Text)`
   margin: 25px 0px 5px;
 `
-const Role = styled.p`
-  ${({ theme }) => theme.fonts.reg12};
+
+const Role = styled(Text)`
   margin: 0px;
 `
 
@@ -69,8 +69,7 @@ const ApplicationNameContainer = styled.div`
     display: none;
   }
 `
-const ApplicationName = styled.div`
-  ${({ theme }) => theme.fonts.h4};
+const ApplicationName = styled(Text)`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -100,13 +99,19 @@ export const LeftNavigation = (props: ILeftNavigationProps) => {
     >
       <Container>
         <ApplicationNameContainer>
-          <ApplicationName>{props.applicationName}</ApplicationName>
+          <ApplicationName variant="h4" element="h4">
+            {props.applicationName}
+          </ApplicationName>
         </ApplicationNameContainer>
         <UserInfo>
           <>
             {props.avatar && props.avatar()}
-            <UserName>{props.name && props.name}</UserName>
-            <Role>{props.role && props.role}</Role>
+            <UserName variant="h4" element="h4">
+              {props.name && props.name}
+            </UserName>
+            <Role variant="reg12" element="span">
+              {props.role && props.role}
+            </Role>
           </>
         </UserInfo>
       </Container>

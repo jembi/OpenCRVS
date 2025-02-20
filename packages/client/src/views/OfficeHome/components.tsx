@@ -14,6 +14,7 @@ import { DeclarationIcon } from '@opencrvs/components/lib/icons/DeclarationIcon'
 import { STATUSTOCOLOR } from '@client/views/RecordAudit/RecordAudit'
 import { Duplicate } from '@opencrvs/components/lib/icons'
 import { Link } from '@opencrvs/components/lib/Link'
+import { Text } from '@opencrvs/components/lib/Text'
 
 const Flex = styled.div`
   display: flex;
@@ -29,10 +30,7 @@ export const NoNameContainer = styled(Link).attrs({
   color: 'negative'
 })``
 
-const Event = styled.div`
-  color: ${({ theme }) => theme.colors.grey500};
-  ${({ theme }) => theme.fonts.reg16}
-`
+const Event = styled(Text)``
 
 const NameEventContainer = styled.div`
   white-space: nowrap;
@@ -125,7 +123,11 @@ export const IconWithNameEvent = ({
       )}
       <NameEventContainer id="nameEvent">
         {name}
-        {event && <Event>{event}</Event>}
+        {event && (
+          <Event variant="reg16" color="grey500" element="span">
+            {event}
+          </Event>
+        )}
       </NameEventContainer>
     </Flex>
   )

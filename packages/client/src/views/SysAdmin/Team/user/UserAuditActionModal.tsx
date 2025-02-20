@@ -42,6 +42,7 @@ import {
 } from '@apollo/client'
 import { withApollo, WithApolloClient } from '@apollo/client/react/hoc'
 import { getOfflineData } from '@client/offline/selectors'
+import { Text } from '@opencrvs/components'
 import { GetUserQuery, GetUserQueryVariables } from '@client/utils/gateway'
 
 const { useState, useEffect } = React
@@ -72,9 +73,7 @@ interface IUserAuditVariables {
   comment: string
 }
 
-const Subtitle = styled.h2`
-  ${({ theme }) => theme.fonts.reg18};
-  color: ${({ theme }) => theme.colors.copy};
+const Subtitle = styled(Text)`
   padding-bottom: 16px;
   border-bottom: 1px solid ${({ theme }) => theme.colors.grey200};
 `
@@ -235,7 +234,9 @@ function UserAuditActionModalComponent(
       responsive
       actions={actions}
     >
-      <Subtitle id="modal-subtitle">{modalSubtitle}</Subtitle>
+      <Subtitle id="modal-subtitle" variant="reg18" color="copy" element="span">
+        {modalSubtitle}
+      </Subtitle>
       {formError && isErrorVisible && (
         <ErrorText id="form-error">{formError}</ErrorText>
       )}

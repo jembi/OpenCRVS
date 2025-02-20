@@ -10,16 +10,16 @@
  */
 import * as React from 'react'
 import styled from 'styled-components'
+import { Text } from '@opencrvs/components/src/Text'
 
-const Label = styled.span`
-  ${({ theme }) => theme.fonts.h4}
-`
-const Value = styled.span`
-  ${({ theme }) => theme.fonts.reg18}
+const Label = styled(Text)``
+
+const Value = styled(Text)`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 `
+
 const LabelValuePairContainer = styled.div`
   display: flex;
   flex-wrap: nowrap;
@@ -35,8 +35,12 @@ interface IInfo {
 export function LabelValuePair({ label, value }: IInfo) {
   return (
     <LabelValuePairContainer>
-      <Label>{label}: </Label>
-      <Value>{value}</Value>
+      <Label variant="h4" element="h4">
+        {label}:{' '}
+      </Label>
+      <Value variant="reg18" element="span">
+        {value}
+      </Value>
     </LabelValuePairContainer>
   )
 }

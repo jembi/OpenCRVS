@@ -28,6 +28,7 @@ import { NoWifi } from '@opencrvs/components/lib/icons'
 import { withOnlineStatus } from '@client/views/OfficeHome/LoadingIndicator'
 import { constantsMessages } from '@client/i18n/messages/constants'
 import { buttonMessages } from '@client/i18n/messages/buttons'
+import { Text as StyledText } from '@opencrvs/components/lib/Text'
 import {
   RouteComponentProps,
   withRouter
@@ -61,8 +62,7 @@ const ConnectivityContainer = styled.div`
 const NoConnectivity = styled(NoWifi)`
   width: 24px;
 `
-const Text = styled.div`
-  ${({ theme }) => theme.fonts.reg16};
+const Text = styled(StyledText)`
   text-align: center;
 `
 
@@ -124,7 +124,7 @@ class TeamSearchComponent extends React.Component<Props, State> {
         ) : (
           <ConnectivityContainer>
             <NoConnectivity />
-            <Text id="no-connection-text">
+            <Text id="no-connection-text" variant="reg16" element="span">
               {intl.formatMessage(constantsMessages.noConnection)}
             </Text>
           </ConnectivityContainer>

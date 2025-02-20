@@ -77,7 +77,9 @@ function Body({
       {children}
       <PaginationLoaderContainer isShowPagination={isShowPagination}>
         {noContent && !loading && (
-          <NoResultText id="no-record">{noResultText}</NoResultText>
+          <NoResultText id="no-record" variant="h4" element="p">
+            {noResultText}
+          </NoResultText>
         )}
         {isShowPagination &&
           !!paginationId &&

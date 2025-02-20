@@ -19,6 +19,7 @@ import { SortIcon } from '../icons/SortIcon'
 import { IAction } from '../common-types'
 import { ListItemAction } from './components/ListItemAction'
 import { useWindowSize } from '../hooks'
+import { Text } from '@opencrvs/components/src/Text'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -37,9 +38,7 @@ const TableHeader = styled.div`
   }
 `
 
-export const NoResultText = styled.div`
-  color: ${({ theme }) => theme.colors.grey600};
-  ${({ theme }) => theme.fonts.bold16}
+export const NoResultText = styled(Text)`
   text-align: left;
   @media (max-width: ${({ theme }) => theme.grid.breakpoints.lg}px) {
     position: fixed;
@@ -222,7 +221,14 @@ const WorkqueueComp = ({
         />
       )}
       {!loading && noResultText && content.length <= 0 && (
-        <NoResultText id="no-record">{noResultText}</NoResultText>
+        <NoResultText
+          id="no-record"
+          variant="bold16"
+          color="grey600"
+          element="span"
+        >
+          {noResultText}
+        </NoResultText>
       )}
     </Wrapper>
   )

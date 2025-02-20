@@ -11,6 +11,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Cross } from '../icons'
+import { Text } from '@opencrvs/components/src/Text'
 
 interface IProps {
   title?: string
@@ -45,11 +46,9 @@ const ModalContent = styled.div`
   position: relative;
 `
 
-const Heading = styled.h3`
-  color: ${({ theme }) => theme.colors.copy};
+const Heading = styled(Text)`
   text-align: center;
   margin-bottom: 24px;
-  ${({ theme }) => theme.fonts.h4};
 `
 
 const Actions = styled.div`
@@ -91,7 +90,11 @@ export const Modal = ({
   return (
     <Backdrop className={className}>
       <ModalContent>
-        {title && <Heading>{title}</Heading>}
+        {title && (
+          <Heading variant="h4" color="copy" element="h4">
+            {title}
+          </Heading>
+        )}
         {handleClose && (
           <TopRight onClick={handleClose}>
             <Cross />

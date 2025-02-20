@@ -26,6 +26,7 @@ import { getOfflineData } from '@client/offline/selectors'
 import { CountryLogo } from '@opencrvs/components/lib/icons'
 import { Box } from '@opencrvs/components/lib/Box'
 import { useSelector } from 'react-redux'
+import { Text } from '@opencrvs/components'
 
 export const Page = styled.div`
   color: ${({ theme }) => theme.colors.copy};
@@ -52,18 +53,15 @@ export const LogoContainer = styled.div`
   }
 `
 
-const TitleHolder = styled.div`
-  ${({ theme }) => theme.fonts.h1};
+const TitleHolder = styled(Text)`
   text-align: center;
   padding-top: 20px;
 `
-const InstructionHolder = styled.div`
-  ${({ theme }) => theme.fonts.reg16};
+const InstructionHolder = styled(Text)`
   margin: 0;
   text-align: center;
   padding: 20px 8px 40px 8px;
 `
-
 interface IOwnProps {
   setupData: IProtectedAccountSetupData
   goToStep: (
@@ -89,12 +87,12 @@ export function UserSetupPage({ setupData, goToStep }: IOwnProps) {
           <LogoContainer>
             <CountryLogo src={offlineCountryConfig.config.COUNTRY_LOGO.file} />
           </LogoContainer>
-          <TitleHolder>
+          <TitleHolder variant="h1" element="h1">
             {intl.formatMessage(messages.userSetupWelcomeTitle, {
               applicationName: offlineCountryConfig.config.APPLICATION_NAME
             })}
           </TitleHolder>
-          <InstructionHolder>
+          <InstructionHolder variant="reg16" element="span">
             {intl.formatMessage(messages.userSetupIntroduction)}
           </InstructionHolder>
           <Button

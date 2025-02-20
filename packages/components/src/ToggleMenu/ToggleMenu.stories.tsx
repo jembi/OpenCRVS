@@ -13,6 +13,7 @@ import styled from 'styled-components'
 import { Icon } from '../Icon'
 import { IToggleMenuItem, ToggleMenu } from './ToggleMenu'
 import React from 'react'
+import { Text } from '@opencrvs/components/src/Text'
 
 interface IProps {
   id: string
@@ -22,16 +23,18 @@ interface IProps {
   hide?: boolean
   showSubmenu: boolean
 }
-const UserNameStyle = styled.div`
-  ${({ theme }) => theme.fonts.reg18};
-`
-const UserRoleStyle = styled.div`
-  ${({ theme }) => theme.fonts.reg12};
-`
+const UserNameStyle = styled(Text)``
+
+const UserRoleStyle = styled(Text)``
+
 const header = (
   <>
-    <UserNameStyle>Atiq Zaman</UserNameStyle>
-    <UserRoleStyle>Field Agent</UserRoleStyle>
+    <UserNameStyle variant="reg18" element="span">
+      Atiq Zaman
+    </UserNameStyle>
+    <UserRoleStyle variant="reg12" element="span">
+      Field Agent
+    </UserRoleStyle>
   </>
 )
 

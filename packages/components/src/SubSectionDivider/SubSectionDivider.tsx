@@ -10,6 +10,7 @@
  */
 import * as React from 'react'
 import styled from 'styled-components'
+import { Text } from '@opencrvs/components/src/Text'
 
 const SubSectionWrapper = styled.div`
   border-top: solid 1px ${({ theme }) => theme.colors.grey200};
@@ -17,10 +18,8 @@ const SubSectionWrapper = styled.div`
   flex-direction: row;
 `
 
-const Title = styled.div`
-  ${({ theme }) => theme.fonts.h3};
-  color: ${({ theme }) => theme.colors.copy};
-`
+const Title = styled(Text)``
+
 const Optional = styled.span<
   { disabled?: boolean } & React.LabelHTMLAttributes<HTMLLabelElement>
 >`
@@ -44,7 +43,9 @@ export const SubSectionDivider = ({
   disabled
 }: ISubSectionProps) => (
   <SubSectionWrapper>
-    <Title>{label}</Title>
+    <Title variant="h3" color="copy" element="h3">
+      {label}
+    </Title>
     {required === false && (
       <Optional disabled={disabled}>
         &nbsp;&nbsp;•&nbsp;{optionalLabel}

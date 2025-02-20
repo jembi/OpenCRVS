@@ -146,9 +146,7 @@ const SpinnerWrapper = styled.div`
   padding: 20px;
 `
 
-const ErrorText = styled.div`
-  color: ${({ theme }) => theme.colors.negative};
-  ${({ theme }) => theme.fonts.reg16};
+const ErrorText = styled(Text)`
   text-align: center;
   margin-top: 100px;
 `
@@ -1112,7 +1110,12 @@ class RegisterFormView extends React.Component<FullProps, State> {
           )}
         >
           {isErrorOccured && (
-            <ErrorText id="error_message_section">
+            <ErrorText
+              id="error_message_section"
+              variant="reg16"
+              color="negative"
+              element="span"
+            >
               {intl.formatMessage(messages.registerFormQueryError)}
             </ErrorText>
           )}

@@ -13,6 +13,7 @@ import styled from 'styled-components'
 import { BackArrowDeepBlue, Cross } from '../icons'
 import { CircleButton } from '../buttons'
 import { AppBar, IAppBarProps } from '../AppBar'
+import { Text } from '../Text'
 const ActionContainer = styled.div`
   width: 100%;
 `
@@ -21,14 +22,12 @@ const BackButtonContainer = styled.div`
   cursor: pointer;
 `
 
-const BackButtonText = styled.span`
-  ${({ theme }) => theme.fonts.bold16};
+const BackButtonText = styled(Text)`
   text-transform: capitalize;
   @media (max-width: ${({ theme }) => theme.grid.breakpoints.md}px) {
     display: none;
   }
 `
-
 const Container = styled.div<{ hideBackground: boolean | undefined }>`
   ${({ theme }) => theme.fonts.reg16};
   ${({ theme, hideBackground }) => (hideBackground ? '' : theme.shadows.light)};
@@ -78,7 +77,9 @@ export const ActionPageLight = ({
         key="action_page_back_button"
       >
         <CircleButton>{(icon && icon()) || <BackArrowDeepBlue />}</CircleButton>
-        <BackButtonText>{backLabel ? backLabel : ''}</BackButtonText>
+        <BackButtonText variant="bold16" element="span">
+          {backLabel ? backLabel : ''}
+        </BackButtonText>
       </BackButtonContainer>
     )
   }

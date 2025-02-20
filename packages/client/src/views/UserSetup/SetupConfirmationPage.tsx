@@ -27,13 +27,12 @@ import { buttonMessages } from '@client/i18n/messages'
 import { IStoreState } from '@client/store'
 import { getOfflineData } from '@client/offline/selectors'
 import { Content, ContentSize } from '@opencrvs/components/lib/Content'
+import { Text } from '@opencrvs/components'
 
-const TitleHolder = styled.div`
-  ${({ theme }) => theme.fonts.h1};
+const TitleHolder = styled(Text)`
   padding: 50px 65px 0px 65px;
 `
-const InstructionHolder = styled.div`
-  ${({ theme }) => theme.fonts.reg16};
+const InstructionHolder = styled(Text)`
   padding: 40px 60px 30px 60px;
 `
 const LoginButton = styled(PrimaryButton)`
@@ -59,10 +58,10 @@ export function SetupConfirmationPage() {
           <LogoContainer>
             <CountryLogo src={offlineCountryConfig.config.COUNTRY_LOGO.file} />
           </LogoContainer>
-          <TitleHolder>
+          <TitleHolder variant="h1" element="h1">
             {intl.formatMessage(messages.setupCompleteTitle)}
           </TitleHolder>
-          <InstructionHolder>
+          <InstructionHolder variant="reg16" element="span">
             {intl.formatMessage(messages.userSetupInstruction)}
           </InstructionHolder>
           <LoginButton

@@ -12,6 +12,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { CircleButton } from '../../buttons'
 import { IDomProps } from '../AppHeader'
+import { Text } from '../../Text'
 
 interface IMenuAction {
   icon: () => React.ReactNode
@@ -36,8 +37,7 @@ const HeaderContainer = styled.div`
   z-index: 2;
 `
 
-const Title = styled.span`
-  ${({ theme }) => theme.fonts.h4};
+const Title = styled(Text)`
   align-self: center;
   white-space: nowrap;
   overflow: hidden;
@@ -103,7 +103,13 @@ export const MobileHeader = ({
       {mobileBody ? (
         <SearchBody>{mobileBody}</SearchBody>
       ) : (
-        <HeaderBody>{<Title id="header_title">{title}</Title>}</HeaderBody>
+        <HeaderBody>
+          {
+            <Title id="header_title" variant="h4" element="h4">
+              {title}
+            </Title>
+          }
+        </HeaderBody>
       )}
 
       {mobileRight &&
