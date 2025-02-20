@@ -245,7 +245,7 @@ export const isDateNotPastLimit = (date: string, limit: Date) => {
 }
 
 export const isDateNotBeforeBirth = (date: string, drafts: IFormData) => {
-  const birthDate = drafts?.deceased?.birthDate as string
+  const birthDate = drafts?.deceased?.deceasedBirthDate as string
   return birthDate ? new Date(date) >= new Date(birthDate) : true
 }
 
