@@ -11,7 +11,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 
-export interface ISpinner {
+export interface ISpinner extends React.HTMLAttributes<HTMLDivElement> {
   id: string
   baseColor?: string
   className?: string
@@ -57,13 +57,20 @@ const StyledSpinner = styled.div<ISpinner>`
   }
 `
 
-export const Spinner = ({ id, className, baseColor, size }: ISpinner) => (
+export const Spinner = ({
+  id,
+  className,
+  baseColor,
+  size,
+  ...rest
+}: ISpinner) => (
   <StyledSpinner
     id={id}
     className={className}
     baseColor={baseColor}
     size={size ? size : 48}
     data-testid="spinner"
+    {...rest}
   >
     <svg viewBox="0 0 50 50">
       <circle cx="25" cy="25" r="20" fill="none" strokeWidth="4" />

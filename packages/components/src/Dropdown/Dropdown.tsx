@@ -48,10 +48,10 @@ const StyledContent = styled.ul.withConfig({
   background-color: ${({ theme }) => theme.colors.white};
   ${({ theme }) => theme.shadows.light};
   text-align: left;
-  min-width: 200px;
+  min-width: 256px;
   width: auto;
   white-space: nowrap;
-  padding: 8px 0;
+  padding: 4px;
   position-anchor: ${({ dropdownName }) => `--Dropdown-Anchor-${dropdownName}`};
   inset-area: ${({ position }) => position};
   position-area: ${({ position }) => position};
@@ -78,11 +78,10 @@ const MenuItem = styled.li<{ disabled?: boolean }>`
   color: ${({ theme }) => theme.colors.grey600};
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   outline: none;
   cursor: pointer;
-  margin: 0 6px;
-  border-radius: 4px;
+  border-radius: 2px;
   padding: 8px 12px;
   &:hover {
     background: ${({ theme }) => theme.colors.grey100};

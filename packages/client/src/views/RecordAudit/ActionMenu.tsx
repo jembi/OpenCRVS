@@ -11,14 +11,7 @@
 
 import React from 'react'
 import { DropdownMenu } from '@opencrvs/components/lib/Dropdown'
-import {
-  DangerButton,
-  PrimaryButton,
-  TertiaryButton
-} from '@opencrvs/components/lib/buttons'
-import { CaretDown } from '@opencrvs/components/lib/Icon/all-icons'
 import { useDispatch, useSelector } from 'react-redux'
-import { Icon, ResponsiveModal } from '@opencrvs/components'
 import {
   formatUrl,
   generateCertificateCorrectionUrl,
@@ -68,6 +61,10 @@ import { client } from '@client/utils/apolloClient'
 import { SCOPES } from '@opencrvs/commons/client'
 import { EventType } from '@client/utils/gateway'
 import { DeleteModal } from '@client/views/RegisterForm/RegisterForm'
+import { Icon } from '@opencrvs/components/lib/Icon'
+import { Dialog } from '@opencrvs/components/lib/Dialog'
+import { Button } from '@opencrvs/components/lib/Button'
+import { Text } from '@opencrvs/components/lib/Text'
 import { useIntl } from 'react-intl'
 import { IDeclarationData } from './utils'
 import { useNavigate } from 'react-router-dom'
@@ -137,9 +134,10 @@ export const ActionMenu: React.FC<{
     <>
       <DropdownMenu id="action">
         <DropdownMenu.Trigger>
-          <PrimaryButton icon={() => <CaretDown />}>
+          <Button type="primary" size="medium">
             {intl.formatMessage(messages.action)}
-          </PrimaryButton>
+            <Icon name="CaretDown" color="currentColor" size="small" />
+          </Button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content>
           {assignment && assignedToOther && (
@@ -271,7 +269,7 @@ const ViewAction: React.FC<{
         )
       }}
     >
-      <Icon name="Eye" color="currentColor" size="large" />
+      <Icon name="Eye" color="currentColor" size="small" />
       {intl.formatMessage(messages.view, {
         recordOrDeclaration: isRecordOrDeclaration(declarationStatus)
       })}
@@ -307,7 +305,7 @@ const CorrectRecordAction: React.FC<
       }}
       disabled={!isActionable}
     >
-      <Icon name="NotePencil" color="currentColor" size="large" />
+      <Icon name="NotePencil" color="currentColor" size="small" />
       {intl.formatMessage(messages.correctRecord)}
     </DropdownMenu.Item>
   )
@@ -321,7 +319,7 @@ const ArchiveAction: React.FC<
 
   return (
     <DropdownMenu.Item onClick={toggleDisplayDialog} disabled={!isActionable}>
-      <Icon name="Archive" color="currentColor" size="large" />
+      <Icon name="Archive" color="currentColor" size="small" />
       {intl.formatMessage(messages.archiveRecord)}
     </DropdownMenu.Item>
   )
@@ -335,7 +333,7 @@ const ReinstateAction: React.FC<
 
   return (
     <DropdownMenu.Item onClick={toggleDisplayDialog} disabled={!isActionable}>
-      <Icon name="FileArrowUp" color="currentColor" size="large" />
+      <Icon name="FileArrowUp" color="currentColor" size="small" />
       {intl.formatMessage(messages.reinstateRecord)}
     </DropdownMenu.Item>
   )
@@ -365,7 +363,7 @@ const ReviewAction: React.FC<
       }}
       disabled={!isActionable}
     >
-      <Icon name="PencilLine" color="currentColor" size="large" />
+      <Icon name="PencilLine" color="currentColor" size="small" />
       {intl.formatMessage(messages.reviewDeclaration, { isDuplicate })}
     </DropdownMenu.Item>
   )
@@ -397,7 +395,7 @@ const ReviewCorrectionAction: React.FC<
       }}
       disabled={!isActionable}
     >
-      <Icon name="PencilLine" color="currentColor" size="large" />
+      <Icon name="PencilLine" color="currentColor" size="small" />
       {intl.formatMessage(messages.reviewCorrection)}
     </DropdownMenu.Item>
   )
@@ -446,7 +444,7 @@ const UpdateAction: React.FC<IActionItemCommonProps & IDeclarationProps> = ({
       }}
       disabled={!isActionable}
     >
-      <Icon name="PencilCircle" color="currentColor" size="large" />
+      <Icon name="PencilCircle" color="currentColor" size="small" />
       {intl.formatMessage(messages.updateDeclaration)}
     </DropdownMenu.Item>
   )
@@ -478,7 +476,7 @@ const PrintAction: React.FC<IActionItemCommonProps & IDeclarationProps> = ({
       }}
       disabled={!isActionable}
     >
-      <Icon name="Printer" color="currentColor" size="large" />
+      <Icon name="Printer" color="currentColor" size="small" />
       {intl.formatMessage(messages.printDeclaration)}
     </DropdownMenu.Item>
   )
@@ -507,7 +505,7 @@ const IssueAction: React.FC<IActionItemCommonProps & IDeclarationProps> = ({
       }}
       disabled={!isActionable}
     >
-      <Icon name="Handshake" color="currentColor" size="large" />
+      <Icon name="Handshake" color="currentColor" size="small" />
       {intl.formatMessage(messages.issueCertificate)}
     </DropdownMenu.Item>
   )
@@ -521,7 +519,7 @@ const DeleteAction: React.FC<{
   if (declarationStatus !== SUBMISSION_STATUS.DRAFT) return null
   return (
     <DropdownMenu.Item onClick={handleDelete}>
-      <Icon name="Trash" color="currentColor" size="large" />
+      <Icon name="Trash" color="currentColor" size="small" />
       {intl.formatMessage(buttonMessages.deleteDeclaration)}
     </DropdownMenu.Item>
   )
@@ -544,7 +542,7 @@ const UnassignAction: React.FC<{
 
   return (
     <DropdownMenu.Item onClick={handleUnassign}>
-      <Icon name="ArrowCircleDown" color="currentColor" size="large" />
+      <Icon name="ArrowCircleDown" color="currentColor" size="small" />
       {intl.formatMessage(buttonMessages.unassign)}
     </DropdownMenu.Item>
   )
@@ -558,12 +556,14 @@ const UnassignModal: React.FC<{
 }> = ({ close, assignedSelf, name, officeName }) => {
   const intl = useIntl()
   return (
-    <ResponsiveModal
-      autoHeight
-      responsive={false}
+    <Dialog
       title={intl.formatMessage(conflictsMessages.unassignTitle)}
+      isOpen={true}
+      onClose={() => close(null)}
       actions={[
-        <TertiaryButton
+        <Button
+          type="tertiary"
+          size="medium"
           id="cancel_unassign"
           key="cancel_unassign"
           onClick={() => {
@@ -571,8 +571,10 @@ const UnassignModal: React.FC<{
           }}
         >
           {intl.formatMessage(buttonMessages.cancel)}
-        </TertiaryButton>,
-        <DangerButton
+        </Button>,
+        <Button
+          type="negative"
+          size="medium"
           key="confirm_unassign"
           id="confirm_unassign"
           onClick={() => {
@@ -580,17 +582,17 @@ const UnassignModal: React.FC<{
           }}
         >
           {intl.formatMessage(buttonMessages.unassign)}
-        </DangerButton>
+        </Button>
       ]}
-      show={true}
-      handleClose={() => close(null)}
     >
-      {assignedSelf
-        ? intl.formatMessage(conflictsMessages.selfUnassignDesc)
-        : intl.formatMessage(conflictsMessages.regUnassignDesc, {
-            name,
-            officeName
-          })}
-    </ResponsiveModal>
+      <Text element="p" variant="reg16" color="grey500">
+        {assignedSelf
+          ? intl.formatMessage(conflictsMessages.selfUnassignDesc)
+          : intl.formatMessage(conflictsMessages.regUnassignDesc, {
+              name,
+              officeName
+            })}
+      </Text>
+    </Dialog>
   )
 }

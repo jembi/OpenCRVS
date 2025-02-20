@@ -27,6 +27,7 @@ export const base = ({ fullWidth }: { fullWidth?: boolean }) => css`
   opacity: 1;
   margin: 0;
   background: transparent;
+  gap: 8px;
 
   ${fullWidth &&
   css`
@@ -34,11 +35,7 @@ export const base = ({ fullWidth }: { fullWidth?: boolean }) => css`
   `}
 
   svg {
-    height: 24px;
-    width: 24px;
     vertical-align: top;
-    margin-left: -2px;
-    margin-right: 8px;
     pointer-events: none;
   }
 
@@ -203,13 +200,6 @@ export const small = ({ loading }: { loading?: boolean }) => css`
   height: 32px;
   padding: 8px;
 
-  svg {
-    height: 18px;
-    width: 18px;
-    margin-right: 6px;
-    margin-left: -1px;
-  }
-
   ${loading &&
   css`
     svg {
@@ -223,22 +213,12 @@ export const medium = css`
   ${({ theme }) => theme.fonts.bold16};
   height: 40px;
   padding: 0 12px;
-
-  svg {
-    height: 20px;
-    width: 20px;
-  }
 `
 
 export const large = css`
   ${({ theme }) => theme.fonts.reg18};
   height: 54px;
   padding: 0 16px;
-
-  svg {
-    height: 24px;
-    width: 24px;
-  }
 `
 
 export const loading = css`

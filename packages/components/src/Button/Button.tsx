@@ -91,7 +91,12 @@ export const Button = ({
       {...props}
     >
       {loading && (
-        <Spinner id="button-loading" size={24} baseColor="currentColor" />
+        <Spinner
+          id="button-loading"
+          size={24}
+          baseColor="currentColor"
+          style={{ marginRight: '-6px' }}
+        />
       )}
       {children}
     </StyledButton>
