@@ -8,15 +8,28 @@
  *
  * Copyright (C) The OpenCRVS Authors located at https://github.com/opencrvs/opencrvs-core/blob/master/AUTHORS.
  */
-import { UUID } from '@opencrvs/commons'
+import { UUID, fetchJSON, joinURL, Roles, SCOPES } from '@opencrvs/commons'
+import { env } from '@user-mgnt/environment'
 import User from '@user-mgnt/model/user'
 import { resolveLocationChildren } from '@user-mgnt/utils/location'
 
-// @TODO: Count these by scopes or deprecate for now from performance view
 export async function countUsersByLocation(locationId: UUID | undefined) {
   // For the whole country
+  const roles = await fetchJSON<Roles>(
+    joinURL(env.COUNTRY_CONFIG_URL, '/roles')
+  )
+  const registrarRoles = roles
+    .filter((role) => role.scopes.includes(SCOPES.RECORD_REGISTER))
+    .map((role) => role.id)
   if (!locationId) {
-    const resArray = await User.aggregate([{ $count: 'registrars' }])
+    const resArray = await User.aggregate([
+      {
+        $match: {
+          role: { $in: registrarRoles }
+        }
+      },
+      { $count: 'registrars' }
+    ])
     return resArray[0] ?? { registrars: 0 }
   }
 
@@ -25,7 +38,8 @@ export async function countUsersByLocation(locationId: UUID | undefined) {
   const resArray = await User.aggregate([
     {
       $match: {
-        primaryOfficeId: { $in: locationChildren }
+        primaryOfficeId: { $in: locationChildren },
+        role: { $in: registrarRoles }
       }
     },
     {

@@ -108,7 +108,7 @@ async function getDeclarationIds(
 
 export async function fetchTaskByCompositionIdFromHearth(id: string) {
   const task = await fetchFromHearth<Bundle<Task>>(
-    `/Task?focus=Composition/${id}`
+    `Task?focus=Composition/${id}`
   )
   return task
 }

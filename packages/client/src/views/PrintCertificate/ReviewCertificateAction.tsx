@@ -205,6 +205,7 @@ export const ReviewCertificate = () => {
           </Box>
           <Content
             title={intl.formatMessage(certificateMessages.reviewTitle)}
+            showTitleOnMobile
             bottomActionDirection="row"
             bottomActionButtons={[
               canUserCorrectRecord ? (

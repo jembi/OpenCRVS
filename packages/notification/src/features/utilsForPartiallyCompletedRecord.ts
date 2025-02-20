@@ -20,7 +20,8 @@ import {
   RejectedRecord,
   RelatedPerson,
   resourceIdentifierToUUID,
-  SavedRelatedPerson
+  SavedRelatedPerson,
+  CompositionSectionCode
 } from '@opencrvs/commons/types'
 
 export function getInformantName(record: InProgressRecord | RejectedRecord) {
@@ -49,6 +50,31 @@ export function getInformantName(record: InProgressRecord | RejectedRecord) {
     return
   }
   return [name.given?.join(' '), name.family].join(' ').trim()
+}
+
+export function getPersonName(
+  record: RejectedRecord,
+  personType: 'deceased' | 'child'
+) {
+  const compositionCode: Extract<
+    CompositionSectionCode,
+    'deceased-details' | 'child-details'
+  > = `${personType}-details`
+  const composition = getComposition(record)
+  const patientSection = findCompositionSection(compositionCode, composition)
+  if (!patientSection) {
+    return
+  }
+  const person = getResourceFromBundleById<Patient>(
+    record,
+    resourceIdentifierToUUID(patientSection.entry[0].reference)
+  )
+  const name = person.name.find(({ use }) => use === 'en')
+  if (!name) {
+    return
+  }
+  // the trim used in given name handles the case when a country does not have middlename
+  return [name.given?.join(' ').trim(), name.family].join(' ').trim()
 }
 
 export function getContactPhoneNo(record: InProgressRecord | RejectedRecord) {

@@ -14,12 +14,12 @@ import { sendNotification } from '@notification/features/sms/utils'
 import { messageKeys } from '@notification/i18n/messages'
 import {
   getOfficeName,
-  getPersonName,
   getRegistrationLocation
 } from '@notification/features/utils'
 import {
   getContactEmail,
   getContactPhoneNo,
+  getPersonName,
   getInformantName
 } from '@notification/features/utilsForPartiallyCompletedRecord'
 

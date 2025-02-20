@@ -871,7 +871,8 @@ export const testDeathCertPayload = {
   type: 'document',
   entry: [
     {
-      fullUrl: 'urn:uuid:75a7d7c1-ab9e-43d9-bdb5-8ba14f46cc4a',
+      fullUrl:
+        '/fhir/PaymentReconciliation/75a7d7c1-ab9e-43d9-bdb5-8ba14f46cc4a/_history/94d9feab-78f9-4de7-9b4b-a4bcbef04a57',
       resource: {
         identifier: {
           system: 'urn:ietf:rfc:3986',
@@ -975,7 +976,8 @@ export const testDeathCertPayload = {
           coding: [{ system: 'http://opencrvs.org/specs/types', code: 'DEATH' }]
         },
         focus: {
-          reference: 'urn:uuid:75a7d7c1-ab9e-43d9-bdb5-8ba14f46cc4a'
+          reference:
+            'PaymentReconciliation/75a7d7c1-ab9e-43d9-bdb5-8ba14f46cc4a'
         },
         id: 'a633299b-1738-4acc-aad8-a3220f910499',
         identifier: [

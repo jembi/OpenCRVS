@@ -1026,7 +1026,21 @@ class CorrectionSummaryComponent extends React.Component<IFullProps, IState> {
   }
 
   makeCorrection = () => {
-    const declaration = this.props.declaration
+    let declaration = this.props.declaration
+    // Delete certificate properties during print record corrections
+    // since correction flow doesn't handle certificates
+    if (declaration?.data?.registration.certificates) {
+      const { certificates, ...rest } = declaration.data.registration
+      declaration = {
+        ...declaration,
+        data: {
+          ...declaration.data,
+          registration: {
+            ...rest
+          }
+        }
+      }
+    }
     if (
       this.props.scopes?.includes(SCOPES.RECORD_REGISTRATION_REQUEST_CORRECTION)
     ) {

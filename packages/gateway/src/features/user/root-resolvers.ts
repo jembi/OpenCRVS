@@ -166,7 +166,8 @@ export const resolvers: GQLResolver = {
           !inScope(authHeader, [
             SCOPES.USER_READ,
             SCOPES.USER_READ_MY_JURISDICTION,
-            SCOPES.USER_READ_MY_OFFICE
+            SCOPES.USER_READ_MY_OFFICE,
+            SCOPES.PERFORMANCE_READ
           ])
         ) {
           throw new Error('Search field agents is not allowed for this user')
@@ -231,32 +232,43 @@ export const resolvers: GQLResolver = {
 
         const roles = await dataSources.countryConfigAPI.getRoles()
 
-        const fieldAgentList: GQLSearchFieldAgentResponse[] =
-          userResponse.results.map((user: IUserModelData) => {
-            const role = roles.find((role) => role.id === user.role)
+        const fieldAgentRoles = roles
+          .filter((role) =>
+            role.scopes.includes(SCOPES.RECORD_SUBMIT_FOR_REVIEW)
+          )
+          .map((role) => role.id)
 
-            const metricsData = metricsForPractitioners.find(
-              (metricsForPractitioner: { practitionerId: string }) =>
-                metricsForPractitioner.practitionerId === user.practitionerId
-            )
-            return {
-              practitionerId: user.practitionerId,
-              fullName: getFullName(user, language),
-              role: role,
-              status: user.status,
-              avatar: user.avatar,
-              primaryOfficeId: user.primaryOfficeId,
-              creationDate: user?.creationDate,
-              totalNumberOfDeclarationStarted:
-                metricsData?.totalNumberOfDeclarationStarted ?? 0,
-              totalNumberOfInProgressAppStarted:
-                metricsData?.totalNumberOfInProgressAppStarted ?? 0,
-              totalNumberOfRejectedDeclarations:
-                metricsData?.totalNumberOfRejectedDeclarations ?? 0,
-              averageTimeForDeclaredDeclarations:
-                metricsData?.averageTimeForDeclaredDeclarations ?? 0
-            }
-          })
+        const fieldAgentList: GQLSearchFieldAgentResponse[] =
+          userResponse.results
+            .filter((user: IUserModelData) => {
+              const role = roles.find((role) => role.id === user.role)
+              return role && fieldAgentRoles.includes(role.id)
+            })
+            .map((user: IUserModelData) => {
+              const role = roles.find((role) => role.id === user.role)
+
+              const metricsData = metricsForPractitioners.find(
+                (metricsForPractitioner: { practitionerId: string }) =>
+                  metricsForPractitioner.practitionerId === user.practitionerId
+              )
+              return {
+                practitionerId: user.practitionerId,
+                fullName: getFullName(user, language),
+                role: role,
+                status: user.status,
+                avatar: user.avatar,
+                primaryOfficeId: user.primaryOfficeId,
+                creationDate: user?.creationDate,
+                totalNumberOfDeclarationStarted:
+                  metricsData?.totalNumberOfDeclarationStarted ?? 0,
+                totalNumberOfInProgressAppStarted:
+                  metricsData?.totalNumberOfInProgressAppStarted ?? 0,
+                totalNumberOfRejectedDeclarations:
+                  metricsData?.totalNumberOfRejectedDeclarations ?? 0,
+                averageTimeForDeclaredDeclarations:
+                  metricsData?.averageTimeForDeclaredDeclarations ?? 0
+              }
+            })
 
         return {
           results: fieldAgentList,

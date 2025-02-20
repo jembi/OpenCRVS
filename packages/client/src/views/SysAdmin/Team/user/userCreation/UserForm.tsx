@@ -30,7 +30,6 @@ import {
 import { IStoreState } from '@client/store'
 import styled from 'styled-components'
 import { clearUserFormData, modifyUserFormData } from '@client/user/userReducer'
-import { UserRole } from '@client/utils/gateway'
 import { ActionPageLight } from '@opencrvs/components/lib/ActionPageLight'
 import { Button } from '@opencrvs/components/lib/Button'
 import { FormikTouched, FormikValues } from 'formik'
@@ -62,7 +61,6 @@ type IProps = {
   nextSectionId: string
   nextGroupId: string
   offlineCountryConfig: IOfflineData
-  userRoles: UserRole[]
   user: UserDetails | null
 }
 
@@ -128,13 +126,8 @@ class UserFormComponent extends React.Component<IFullProps, IState> {
     this.props.router.navigate(-1)
   }
 
-  modifyData = (values: any) => {
+  modifyData = (values: IFormSectionData) => {
     const { formData } = this.props
-    if (values.role) {
-      values.scopes = this.props.userRoles.find(
-        (role) => role.id === values.role
-      )!.scopes
-    }
     this.props.modifyUserFormData({ ...formData, ...values })
   }
 
@@ -199,7 +192,6 @@ class UserFormComponent extends React.Component<IFullProps, IState> {
 const mapStateToProps = (state: IStoreState) => {
   return {
     offlineCountryConfig: getOfflineData(state),
-    userRoles: state.userForm.userRoles,
     user: getUserDetails(state)
   }
 }

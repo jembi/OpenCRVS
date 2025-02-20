@@ -43,7 +43,9 @@ export function getBirthRegistrationSectionTransformer(
         queryData[sectionId].certificates.length - 1
       ]
     if (currentCertificate?.collector?.relationship === 'PRINT_IN_ADVANCE') {
-      transformedData[sectionId].certificates = [currentCertificate]
+      transformedData[sectionId].certificates = [
+        { certificateTemplateId: currentCertificate.certificateTemplateId }
+      ]
     }
   }
 }

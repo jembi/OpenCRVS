@@ -236,24 +236,6 @@ export const usePrintableCertificate = (declarationId?: string) => {
   }
 
   const handleEdit = () => {
-    // Delete certificate properties during print record corrections
-    // since correction flow doesn't handle certificates
-    if (declaration?.data?.registration.certificates) {
-      const { certificates, ...rest } = declaration.data.registration
-      const updatedDeclaration = {
-        ...declaration,
-        data: {
-          ...declaration.data,
-          registration: {
-            ...rest
-          }
-        }
-      }
-
-      dispatch(modifyDeclaration(updatedDeclaration))
-      dispatch(writeDeclaration(updatedDeclaration))
-    }
-
     if (!declarationId) {
       // eslint-disable-next-line no-console
       console.error('No declaration id provided')

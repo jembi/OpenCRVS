@@ -63,7 +63,7 @@ export const IssueCollectorFormForOthers = ({
   const navigate = useNavigate()
   const config = useSelector(getOfflineData)
   const user = useSelector(getUserDetails)
-  const { relationship, ...collectorForm }: { [key: string]: any } =
+  const form =
     (declaration &&
       declaration.data.registration.certificates &&
       declaration.data.registration.certificates[0].collector) ||
@@ -153,7 +153,7 @@ export const IssueCollectorFormForOthers = ({
         setAllFieldsDirty={false}
         fields={replaceInitialValues(
           fields,
-          collectorForm,
+          form,
           declaration && declaration.data,
           config,
           user

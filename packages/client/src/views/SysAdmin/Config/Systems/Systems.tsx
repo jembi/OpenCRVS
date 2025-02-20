@@ -274,7 +274,7 @@ export function SystemList() {
                   )}
 
                   <ToggleMenu
-                    id="toggleMenu"
+                    id={`toggleMenu-${system.clientId}`}
                     menuItems={getMenuItems(system)}
                     toggleButton={
                       <Icon

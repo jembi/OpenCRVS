@@ -94,7 +94,7 @@ describe('create new user tests', () => {
       ).toBe('Required to register a new user')
     })
 
-    it('clicking on confirm button with complete data takes user to signature attachment page', async () => {
+    it('clicking on confirm button with complete data takes user to review page', async () => {
       store.dispatch(modifyUserFormData(mockCompleteFormData))
       await waitForElement(testComponent, '#confirm_form')
       testComponent.find('#confirm_form').hostNodes().simulate('click')

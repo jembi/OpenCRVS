@@ -363,3 +363,4 @@ In the next OpenCRVS release v1.5.0, there will be two significant changes both 
 - **Metabase from v0.45.2.1 to v0.46.6.1**
 
 See [Releases](https://github.com/opencrvs/opencrvs-core/releases) for release notes of older releases.
+

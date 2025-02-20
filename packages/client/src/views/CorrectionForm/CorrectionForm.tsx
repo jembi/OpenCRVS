@@ -24,19 +24,9 @@ import {
 import { CorrectionSection } from '@client/forms'
 import { CorrectionReasonForm } from './CorrectionReasonForm'
 import { CorrectionSummary } from './CorrectionSummary'
-import { Spinner } from '@opencrvs/components/lib/Spinner'
-import styled from 'styled-components'
 import { TimeMounted } from '@client/components/TimeMounted'
 import { HOME } from '@client/navigation/routes'
-
-const SpinnerWrapper = styled.div`
-  height: 80vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-`
+import { LoadingSpinner } from '@client/components/DraftLoadingSpinner'
 
 type IProps = IStateProps & IDispatchProps
 
@@ -53,11 +43,7 @@ function CorrectionFormComponent({ sectionId, declaration, ...props }: IProps) {
   }
 
   if (declaration.writingDraft) {
-    return (
-      <SpinnerWrapper>
-        <Spinner id="draft_write_loading" />
-      </SpinnerWrapper>
-    )
+    return <LoadingSpinner />
   }
 
   return (

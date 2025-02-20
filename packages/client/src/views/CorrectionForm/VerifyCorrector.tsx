@@ -48,6 +48,7 @@ import { getOfflineData } from '@client/offline/selectors'
 import { getUserDetails } from '@client/profile/profileSelectors'
 import { IOfflineData } from '@client/offline/reducer'
 import { UserDetails } from '@client/utils/userUtils'
+import { LoadingSpinner } from '@client/components/DraftLoadingSpinner'
 
 interface INameField {
   firstNamesField: string
@@ -220,6 +221,10 @@ const VerifyCorrectorComponent = ({
         })}
       />
     )
+  }
+
+  if (declaration.writingDraft) {
+    return <LoadingSpinner />
   }
   const correctorInfo = getGenericCorrectorInfo(corrector!)
   const hasNoInfo = Object.values(correctorInfo).every(

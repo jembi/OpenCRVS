@@ -8,23 +8,20 @@
  *
  * Copyright (C) The OpenCRVS Authors located at https://github.com/opencrvs/opencrvs-core/blob/master/AUTHORS.
  */
-
 import React, { useState } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
-
+import { Header } from '@client/components/Header/Header'
 import { injectIntl, useIntl } from 'react-intl'
 import { getScope, getUserDetails } from '@client/profile/profileSelectors'
 import { IStoreState } from '@client/store'
-import { SysAdminContentWrapper } from '@client/views/SysAdmin/SysAdminContentWrapper'
 import { messages } from '@client/i18n/messages/views/config'
-
-import { Content, ContentSize, FormTabs } from '@opencrvs/components'
+import { Content, ContentSize, FormTabs, Frame } from '@opencrvs/components'
 import { FormFieldGenerator } from '@client/components/form/FormFieldGenerator'
 import { Button } from '@opencrvs/components/lib/Button'
 import { Icon } from '@opencrvs/components/lib/Icon'
 import { createAdvancedSearchBirthSections } from '@client/forms/advancedSearch/fieldDefinitions/Birth'
 import { createAdvancedSearchDeathSections } from '@client/forms/advancedSearch/fieldDefinitions/Death'
-import { buttonMessages } from '@client/i18n/messages'
+import { buttonMessages, constantsMessages } from '@client/i18n/messages'
 import { messages as advancedSearchFormMessages } from '@client/i18n/messages/views/advancedSearchForm'
 import { getAdvancedSearchParamsState as AdvancedSearchParamsSelector } from '@client/search/advancedSearch/advancedSearchSelectors'
 import { setAdvancedSearchParam } from '@client/search/advancedSearch/actions'
@@ -46,6 +43,7 @@ import { usePermissions } from '@client/hooks/useAuthorization'
 import { useNavigate } from 'react-router-dom'
 import * as routes from '@client/navigation/routes'
 import { UUID } from '@opencrvs/commons/client'
+import { Navigation } from '@client/components/interface/Navigation'
 
 enum TabId {
   BIRTH = 'birth',
@@ -571,9 +569,12 @@ const AdvancedSearch = () => {
 
   return (
     <>
-      <SysAdminContentWrapper
-        isCertificatesConfigPage={true}
-        hideBackground={true}
+      <Frame
+        header={<Header title={intl.formatMessage(messages.advancedSearch)} />}
+        navigation={<Navigation />}
+        skipToContentText={intl.formatMessage(
+          constantsMessages.skipToMainContent
+        )}
       >
         <Content
           title={intl.formatMessage(messages.advancedSearch)}
@@ -608,7 +609,7 @@ const AdvancedSearch = () => {
             />
           )}
         </Content>
-      </SysAdminContentWrapper>
+      </Frame>
     </>
   )
 }

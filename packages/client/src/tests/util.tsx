@@ -1733,7 +1733,6 @@ export const mockDataWithRegistarRoleSelected = {
   phoneNumber: '01662132132',
   registrationOffice: '895cc945-94a9-4195-9a29-22e9310f3385',
   role: 'LOCAL_REGISTRAR',
-  scopes: [SCOPES.PROFILE_ELECTRONIC_SIGNATURE],
   userDetails: '',
   username: '',
   signature: {

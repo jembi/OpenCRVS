@@ -969,7 +969,8 @@ const affidavitCertCollectorGroup: IFormSectionGroup = {
       conditionals: [
         {
           action: 'hide',
-          expression: 'values.noAffidavitAgreement?.length !== 0'
+          expression:
+            'values.noAffidavitAgreement && values.noAffidavitAgreement.length !== 0'
         }
       ]
     },
@@ -1006,7 +1007,7 @@ const affidavitCertCollectorGroup: IFormSectionGroup = {
       conditionals: [
         {
           action: 'hide',
-          expression: 'values.affidavitFile !== ""'
+          expression: 'values.affidavitFile && values.affidavitFile !== ""'
         }
       ]
     }

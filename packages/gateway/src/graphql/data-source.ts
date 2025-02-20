@@ -11,13 +11,26 @@
 
 import { AugmentedRequest, RESTDataSource } from '@apollo/datasource-rest'
 import { Context } from '@gateway/graphql/context'
+import { AuthenticationError } from '@gateway/utils/graphql-errors'
+import { GraphQLError } from 'graphql'
 
 export class OpenCRVSRESTDataSource extends RESTDataSource {
   public context: Context
+
   override willSendRequest(_path: string, request: AugmentedRequest) {
     const { authorization } = this.context.request.headers
     request.headers = { authorization }
   }
+
+  override didEncounterError(error: Error) {
+    if (
+      error instanceof GraphQLError &&
+      error.extensions.code === 'UNAUTHENTICATED'
+    ) {
+      throw new AuthenticationError()
+    }
+  }
+
   constructor(options: { contextValue: Context }) {
     super()
     this.context = options.contextValue

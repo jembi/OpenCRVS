@@ -355,11 +355,11 @@ describe('Certificate collector test for a birth registration without father det
       await waitForElement(component, '#iDType')
     })
 
-    it('show form level error when the mandatory fields are not filled', async () => {
+    it('show field level error when the mandatory fields are not filled', async () => {
       component.find('#confirm_form').hostNodes().simulate('click')
-      await waitForElement(component, '#form_error')
-      expect(component.find('#form_error').hostNodes().text()).toBe(
-        'Complete all the mandatory fields'
+      await waitForElement(component, '#relationship_error')
+      expect(component.find('#relationship_error').hostNodes().text()).toBe(
+        'Required'
       )
     })
 
@@ -417,10 +417,12 @@ describe('Certificate collector test for a birth registration without father det
         )
       })
 
-      it('show form level error when the mandatory fields are not filled', async () => {
+      it('show field level error when the mandatory fields are not filled', async () => {
         component.find('#confirm_form').hostNodes().simulate('click')
-        await waitForElement(component, '#form_error')
-        expect(component.find('#form_error').hostNodes().text()).toBe(
+        await waitForElement(component, '#noAffidavitAgreement_error')
+        expect(
+          component.find('#noAffidavitAgreement_error').hostNodes().text()
+        ).toBe(
           'Upload signed affidavit or click the checkbox if they do not have one.'
         )
       })
@@ -439,7 +441,10 @@ describe('Certificate collector test for a birth registration without father det
               ]
             }
           })
-        waitFor(() => component.find('#field_error').hostNodes().length > 0)
+        await waitForElement(component, '#field-error')
+        expect(component.find('#field-error').hostNodes().text()).toBe(
+          'png, jpeg supported only'
+        )
       })
 
       it('continue to payment section when the mandatory fields are filled and birth event is between 45 days and 5 years', async () => {
@@ -494,10 +499,10 @@ describe('Certificate collector test for a birth registration without father det
         )
       })
 
-      it('should hide form level error while uploading valid file', async () => {
+      it('should hide field level error while uploading valid file', async () => {
         const $confirm = await waitForElement(component, '#confirm_form')
         $confirm.hostNodes().simulate('click')
-        await waitForElement(component, '#form_error')
+        await waitForElement(component, '#noAffidavitAgreement_error')
         component
           .find('input[name="affidavitFile"][type="file"]')
           .simulate('change', {
@@ -511,7 +516,13 @@ describe('Certificate collector test for a birth registration without father det
               ]
             }
           })
-        waitFor(() => component.find('#form_error').hostNodes().length === 0)
+        await waitFor(() => {
+          component.update()
+          return (
+            component.find('#noAffidavitAgreement_error').hostNodes().length ===
+            0
+          )
+        })
       })
     })
   })

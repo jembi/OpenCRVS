@@ -600,7 +600,8 @@ export const getRoutes = () => {
           scope: [
             SCOPES.USER_READ,
             SCOPES.USER_READ_MY_JURISDICTION,
-            SCOPES.USER_READ_MY_OFFICE
+            SCOPES.USER_READ_MY_OFFICE,
+            SCOPES.PERFORMANCE_READ
           ]
         },
         validate: {

@@ -659,7 +659,7 @@ const NavigationView = (props: IFullProps) => {
                   onClick={() => {
                     props.router.navigate(
                       generatePerformanceHomeUrl({
-                        locationId: ''
+                        locationId: userDetails.primaryOffice.id
                       })
                     )
                   }}

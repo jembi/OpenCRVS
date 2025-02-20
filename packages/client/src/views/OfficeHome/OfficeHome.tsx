@@ -102,7 +102,7 @@ const DECLARATION_WORKQUEUE_TABS = [
 const WORKQUEUE_TABS_PAGINATION = {
   [WORKQUEUE_TABS.inProgress]: 'inProgressTab',
   [WORKQUEUE_TABS.sentForApproval]: 'approvalTab',
-  [WORKQUEUE_TABS.sentForReview]: 'reviewTab',
+  [WORKQUEUE_TABS.sentForReview]: 'sentForReviewTab',
   [WORKQUEUE_TABS.readyForReview]: 'reviewTab',
   [WORKQUEUE_TABS.requiresUpdate]: 'rejectTab',
   [WORKQUEUE_TABS.readyToPrint]: 'printTab',

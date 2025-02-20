@@ -188,6 +188,7 @@ function userSectionFormType(): ISerializedFormSection {
       {
         id: 'signature-attachment',
         title: userFormMessages.userSignatureAttachmentTitle,
+        preventContinueIfError: true,
         conditionals: [
           {
             action: 'hide',
@@ -212,7 +213,7 @@ function userSectionFormType(): ISerializedFormSection {
             description: userFormMessages.userSignatureAttachmentDesc,
             allowedDocType: ['image/png'],
             initialValue: '',
-            required: false,
+            required: true,
             validator: []
           }
         ]

@@ -9,7 +9,6 @@
  * Copyright (C) The OpenCRVS Authors located at https://github.com/opencrvs/opencrvs-core/blob/master/AUTHORS.
  */
 import { PrimaryButton, TertiaryButton } from '@opencrvs/components/lib/buttons'
-import { ErrorText } from '@opencrvs/components/lib/ErrorText'
 import { Content, ContentSize } from '@opencrvs/components/lib/Content'
 import { Button } from '@opencrvs/components/lib/Button'
 
@@ -32,10 +31,7 @@ import {
 } from '@client/forms'
 import { EventType } from '@client/utils/gateway'
 import { getVisibleSectionGroupsBasedOnConditions } from '@client/forms/utils'
-import {
-  getValidationErrorsForForm,
-  IFieldErrors
-} from '@client/forms/validation'
+import { getValidationErrorsForForm } from '@client/forms/validation'
 import { buttonMessages } from '@client/i18n/messages'
 import { messages as certificateMessages } from '@client/i18n/messages/views/certificate'
 import {
@@ -51,7 +47,7 @@ import {
   REGISTRAR_HOME_TAB
 } from '@client/navigation/routes'
 import { IStoreState } from '@client/store'
-import styled, { withTheme } from 'styled-components'
+import { withTheme } from 'styled-components'
 import { ITheme } from '@opencrvs/components/lib/theme'
 import {
   getEvent,
@@ -79,11 +75,6 @@ import {
   withRouter
 } from '@client/components/WithRouterProps'
 import { FormikTouched, FormikValues } from 'formik'
-
-const ErrorWrapper = styled.div`
-  margin-top: -3px;
-  margin-bottom: 16px;
-`
 
 type PropsWhenDeclarationIsFound = {
   registerForm: IForm
@@ -158,10 +149,20 @@ const getErrorsOnFieldsBySection = (
 ) => {
   const certificates = draft.data.registration.certificates
   const certificate = (certificates && certificates[0]) || {}
+  const initialValues = fields.reduce((acc, field) => {
+    return {
+      ...acc,
+      [field.name]: field.initialValue
+    }
+  })
   const errors = getValidationErrorsForForm(
     fields,
-    (certificate[sectionId as keyof typeof certificate] as IFormSectionData) ||
-      {},
+    {
+      ...initialValues,
+      ...(certificate[
+        sectionId as keyof typeof certificate
+      ] as IFormSectionData)
+    } as IFormSectionData,
     config,
     draft.data,
     user
@@ -175,7 +176,6 @@ const getErrorsOnFieldsBySection = (
 interface IState {
   showModalForNoSignedAffidavit: boolean
   isFileUploading: boolean
-  showError: boolean
 }
 
 class CollectorFormComponent extends React.Component<IProps, IState> {
@@ -183,8 +183,7 @@ class CollectorFormComponent extends React.Component<IProps, IState> {
     super(props)
     this.state = {
       showModalForNoSignedAffidavit: false,
-      isFileUploading: false,
-      showError: false
+      isFileUploading: false
     }
   }
   setAllFormFieldsTouched!: (touched: FormikTouched<FormikValues>) => void
@@ -255,9 +254,6 @@ class CollectorFormComponent extends React.Component<IProps, IState> {
       )
 
       this.setAllFormFieldsTouched(formGroup)
-      this.setState({
-        showError: true
-      })
       return
     }
 
@@ -271,18 +267,6 @@ class CollectorFormComponent extends React.Component<IProps, IState> {
 
         return
       }
-      if (
-        !(
-          collector.noAffidavitAgreement &&
-          (collector.noAffidavitAgreement as string[]).length > 0
-        )
-      ) {
-        this.setState({
-          showError: true
-        })
-
-        return
-      }
 
       this.props.writeDeclaration(draft)
       this.setState({ showModalForNoSignedAffidavit: true })
@@ -291,7 +275,6 @@ class CollectorFormComponent extends React.Component<IProps, IState> {
     }
 
     this.setState({
-      showError: false,
       showModalForNoSignedAffidavit: false
     })
     if (!nextGroup) {
@@ -374,7 +357,7 @@ class CollectorFormComponent extends React.Component<IProps, IState> {
   }
 
   render() {
-    const { showError, showModalForNoSignedAffidavit } = this.state
+    const { showModalForNoSignedAffidavit } = this.state
     const props = this.props
     const { declaration } = props
 
@@ -404,7 +387,6 @@ class CollectorFormComponent extends React.Component<IProps, IState> {
           hideBackground
           title={formSection.title && intl.formatMessage(formSection.title)}
           goBack={() => {
-            this.setState({ showError: false })
             this.props.router.navigate(-1)
           }}
           goHome={() =>
@@ -445,23 +427,10 @@ class CollectorFormComponent extends React.Component<IProps, IState> {
               </Button>
             ]}
           >
-            {showError && formGroup.error && (
-              <ErrorWrapper>
-                <ErrorText id="form_error">
-                  {(formGroup.error && intl.formatMessage(formGroup.error)) ||
-                    ''}
-                </ErrorText>
-              </ErrorWrapper>
-            )}
             <FormFieldGenerator
               id={formGroup.id}
               key={formGroup.id}
               onChange={(values) => {
-                if (values && values.affidavitFile) {
-                  this.setState({
-                    showError: false
-                  })
-                }
                 this.modifyDeclaration(values, declarationToBeCertified)
               }}
               setAllFieldsDirty={false}
