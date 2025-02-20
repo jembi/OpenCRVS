@@ -1,0 +1,74 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# OpenCRVS is also distributed under the terms of the Civil Registration
+# & Healthcare Disclaimer located at http://opencrvs.org/license.
+#
+# Copyright (C) The OpenCRVS Authors located at https://github.com/opencrvs/opencrvs-core/blob/master/AUTHORS.
+
+name: Check Missing Translation
+
+on:
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  check-missing-translation:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Create directory for core and countryconfig
+      run: |
+        mkdir -m 777 -p $HOME/core
+        mkdir -m 777 -p $HOME/countryconfig
+  
+    - name: Clone countryconfig and check if there any branch exists with the same name like current branch
+      id: set_branch
+      run: |
+        cd $HOME/countryconfig
+        git clone https://github.com/opencrvs/opencrvs-countryconfig.git
+        cd opencrvs-countryconfig
+        working_branch='develop'
+        if [ -z "$(git branch -a | grep ${{ github.head_ref }})" ]; then
+          echo "Branch ${{ github.head_ref }} does not exist in countryconfig, we will use the develop branch"
+          echo "working_branch='develop'" >> $GITHUB_OUTPUT
+        else
+          echo "Branch ${{ github.head_ref }} exists in countryconfig"
+          working_branch='${{ github.head_ref }}'
+          echo "working_branch='${{ github.head_ref }}'" >> $GITHUB_OUTPUT
+        fi
+        echo "countryconfig_path=$HOME/countryconfig/opencrvs-countryconfig" >> $GITHUB_OUTPUT
+        git checkout $working_branch
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with: 
+        node-version: 18
+    
+    - name: Clone the Core repository and Check for missing translation
+      run: |
+        cd $HOME/core
+        acting_branch=${{steps.set_branch.outputs.working_branch}}
+        export COUNTRY_CONFIG_PATH=${{steps.set_branch.outputs.countryconfig_path}}
+        git clone  https://github.com/opencrvs/opencrvs-core.git
+        cd ./opencrvs-core
+        git checkout $acting_branch
+        yarn install
+        cd ./packages/client
+        CI=true yarn extract:translations 2>&1 | tee output.txt
+        if grep -q "Missing translations" output.txt; then
+           awk '/You are missing the following content keys from your country configuration package:/ {flag=1; next} /Add them to this file and run again:/ {flag=0} flag' output.txt > missing_translations.txt
+           sed -i '/^$/d' missing_translations.txt
+           echo "### Summary Of Missing Translation" >> $GITHUB_STEP_SUMMARY
+           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+           cat missing_translations.txt >> $GITHUB_STEP_SUMMARY
+           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+           echo "Add them to this file and and run again:" >> $GITHUB_STEP_SUMMARY
+           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+           echo "/opencrvs-countryconfig/src/translations/client.csv" >> $GITHUB_STEP_SUMMARY
+           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+           exit 1
+        fi

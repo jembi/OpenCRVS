@@ -7,6 +7,8 @@
 #
 # Copyright (C) The OpenCRVS Authors located at https://github.com/opencrvs/opencrvs-core/blob/master/AUTHORS.
 
+set -e
+
 get_abs_filename() {
   echo "$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"
 }
@@ -33,6 +35,7 @@ for i in "$@"; do
   esac
 done
 
+
 if [ -z "$COUNTRY_CONFIG_PATH" ] ; then
   echo 'The Environment variable COUNTRY_CONFIG_PATH must be set in your Terminal, '
   echo 'so we can check that your country configuration has all necessary translations.'
@@ -55,4 +58,8 @@ if $write; then
   exit 0
 fi
 
+if [ $CI = true ]; then
+  yarn run ts-node -- --compiler-options='{"module": "commonjs", "moduleResolution": "node"}' -r tsconfig-paths/register src/extract-translations.ts -- $COUNTRY_CONFIG_PATH --ci
+  exit 0
+fi
 yarn run ts-node -- --compiler-options='{"module": "commonjs", "moduleResolution": "node"}' -r tsconfig-paths/register src/extract-translations.ts -- $COUNTRY_CONFIG_PATH
