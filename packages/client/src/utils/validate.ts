@@ -278,6 +278,25 @@ export const minAgeGapExist = (
   return diff >= minAgeGap
 }
 
+export const dateIsBetween =
+  (dateOneAsString: string, dateTwoAsString: string): Validation =>
+  (value: IFormFieldValue) => {
+    const dateFormat = /^\d{4}-(0?[1-9]|1[0-2])-(0?[1-9]|[12]\d|3[01])$/
+    if (dateFormat.test(value.toString())) {
+      const dateOne = new Date(dateOneAsString).setHours(0, 0, 0, 0)
+      const dateTwo = new Date(dateTwoAsString).setHours(0, 0, 0, 0)
+      const actualDate = new Date(value.toString()).setHours(0, 0, 0, 0)
+
+      const dateIsWithinRange = actualDate >= dateOne && actualDate <= dateTwo
+
+      if (dateIsWithinRange) return undefined
+      return {
+        message: messages.dateIsBetween,
+        props: { dateOne: dateOneAsString, dateTwo: dateTwoAsString }
+      }
+    }
+  }
+
 export const isValidBirthDate: Validation = (
   value: IFormFieldValue,
   drafts?
