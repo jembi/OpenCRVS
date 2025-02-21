@@ -121,6 +121,10 @@ export function isHealthFacility(
   return location.type?.coding?.[0].code === 'HEALTH_FACILITY'
 }
 
+export function isOffice(location: Location): location is Office {
+  return location.type?.coding?.[0].code === 'CRVS_OFFICE'
+}
+
 export function getLocationType(location: Location): string | undefined {
   return location.type?.coding?.[0].code
 }

@@ -9,58 +9,63 @@
  * Copyright (C) The OpenCRVS Authors located at https://github.com/opencrvs/opencrvs-core/blob/master/AUTHORS.
  */
 import { UUID } from '@opencrvs/commons'
-import { resolveLocationChildren } from './locationTreeSolver'
 import * as fixtures from '@opencrvs/commons/fixtures'
+import { resolveChildren } from './children'
+import { fetchFromHearth } from '@config/services/hearth'
+import { resolveLocationChildren } from './locationTreeSolver'
 
-describe('resolveLocationChildren', () => {
-  test('empty locations', () => {
-    const uuid1 = fixtures.savedLocation({
-      id: 'uuid1' as UUID,
-      partOf: undefined
+jest.mock('@config/services/hearth', () => ({
+  fetchFromHearth: jest.fn()
+}))
+
+jest.mock('./locationTreeSolver', () => ({
+  resolveLocationChildren: jest.fn()
+}))
+
+const fetchFromHearthMock = fetchFromHearth as jest.Mock
+const resolveLocationChildrenMock = resolveLocationChildren as jest.Mock
+
+// Cast handler to make it callable
+const handler = resolveChildren as unknown as (req: Request) => Promise<any>
+
+describe('resolveChildren', () => {
+  describe('given a location of type office', () => {
+    test('does not fetch location hierarchy', async () => {
+      const office = fixtures.savedLocation({
+        id: 'uuid1' as UUID,
+        type: { coding: [{ code: 'CRVS_OFFICE' }] }
+      })
+
+      fetchFromHearthMock.mockResolvedValue(office)
+
+      const req = { params: { locationId: office.id } } as any
+
+      const res = await handler(req)
+
+      expect(resolveLocationChildrenMock).not.toHaveBeenCalled()
+      expect(res).toEqual([office])
     })
-    const result = resolveLocationChildren(uuid1, [])
-    expect(result).toEqual([])
   })
 
-  test('parent with no children', () => {
-    const uuid1 = fixtures.savedLocation({
-      id: 'uuid1' as UUID,
-      partOf: undefined
-    })
-    const result = resolveLocationChildren(uuid1, [uuid1])
-    expect(result).toEqual([])
-  })
+  describe('given a location with children', () => {
+    test('should return location and children', async () => {
+      const parent = fixtures.savedLocation({
+        id: 'uuid1' as UUID,
+        type: { coding: [{ code: 'ADMIN_STRUCTURE' }] }
+      })
 
-  test('single level hierarchy', () => {
-    const uuid1 = fixtures.savedLocation({
-      id: 'uuid1' as UUID,
-      partOf: undefined
-    })
-    const uuid2 = fixtures.savedLocation({
-      id: 'uuid2' as UUID,
-      partOf: { reference: 'Location/uuid1' as `Location/${UUID}` }
-    })
-    const result = resolveLocationChildren(uuid1, [uuid1, uuid2])
+      fetchFromHearthMock.mockResolvedValue(parent)
 
-    expect(result).toContainEqual(uuid2)
-    expect(result).toHaveLength(1)
-  })
+      const child1 = fixtures.savedLocation({ id: 'uuid2' as UUID })
+      const child2 = fixtures.savedLocation({ id: 'uuid3' as UUID })
 
-  test('multi-level hierarchy', () => {
-    const uuid1 = fixtures.savedLocation({
-      id: 'uuid1' as UUID,
-      partOf: undefined
-    })
-    const uuid2 = fixtures.savedLocation({
-      id: 'uuid2' as UUID,
-      partOf: { reference: 'Location/uuid1' as `Location/${UUID}` }
-    })
-    const uuid3 = fixtures.savedLocation({
-      id: 'uuid3' as UUID,
-      partOf: { reference: 'Location/uuid2' as `Location/${UUID}` }
-    })
+      resolveLocationChildrenMock.mockResolvedValue([child1, child2])
 
-    const result = resolveLocationChildren(uuid1, [uuid1, uuid2, uuid3])
-    expect(result).toEqual([uuid2, uuid3])
+      const req = { params: { locationId: parent.id } } as any
+
+      const res = await handler(req)
+
+      expect(res).toEqual([parent, child1, child2])
+    })
   })
 })

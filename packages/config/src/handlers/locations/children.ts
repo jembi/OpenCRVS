@@ -9,20 +9,23 @@
  * Copyright (C) The OpenCRVS Authors located at https://github.com/opencrvs/opencrvs-core/blob/master/AUTHORS.
  */
 import { UUID } from '@opencrvs/commons'
+
 import { ServerRoute } from '@hapi/hapi'
+import { fetchFromHearth } from '@config/services/hearth'
+import { SavedLocation, isOffice } from '@opencrvs/commons/types'
 import { resolveLocationChildren } from './locationTreeSolver'
-import { fetchLocations } from '@config/services/hearth'
-import { find } from 'lodash'
-import { notFound } from '@hapi/boom'
 
 export const resolveChildren: ServerRoute['handler'] = async (req) => {
   const { locationId } = req.params as { locationId: UUID }
-  const locations = await fetchLocations()
-  const location = find(locations, { id: locationId })
 
-  if (!location) {
-    return notFound()
+  const location = await fetchFromHearth<SavedLocation>(
+    `Location/${locationId}`
+  )
+  if (isOffice(location)) {
+    return [location]
   }
 
-  return [location, ...resolveLocationChildren(location, locations)]
+  const children = await resolveLocationChildren(locationId)
+
+  return [location, ...children]
 }

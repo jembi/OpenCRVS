@@ -9,20 +9,11 @@
  * Copyright (C) The OpenCRVS Authors located at https://github.com/opencrvs/opencrvs-core/blob/master/AUTHORS.
  */
 import { ServerRoute } from '@hapi/hapi'
-import { fetchLocations } from '@config/services/hearth'
 import { resolveLocationParents } from './locationTreeSolver'
 import { UUID } from '@opencrvs/commons'
-import { find } from 'lodash'
-import { notFound } from '@hapi/boom'
 
 export const locationHierarchyHandler: ServerRoute['handler'] = async (req) => {
   const { locationId } = req.params as { locationId: UUID }
-  const locations = await fetchLocations()
-  const location = find(locations, { id: locationId })
 
-  if (!location) {
-    return notFound()
-  }
-
-  return [...resolveLocationParents(location, locations), location]
+  return await resolveLocationParents(locationId)
 }

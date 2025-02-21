@@ -10,67 +10,68 @@
  */
 
 import {
+  Location,
   resourceIdentifierToUUID,
   SavedLocation
 } from '@opencrvs/commons/types'
 import { UUID } from '@opencrvs/commons'
-import { find } from 'lodash'
+import { fetchFromHearth } from '@config/services/hearth'
+import { MongoClient } from 'mongodb'
+import { env } from '@config/environment'
 
-/**
- * Creates a new Map<SavedLocation.partOf, SavedLocation[]>
- * It sets the first-level children under their parents
- */
-const resolveParentChildrenMap = (locations: SavedLocation[]) => {
-  const parentChildrenMap = new Map<UUID, SavedLocation[]>()
+const client = new MongoClient(env.HEARTH_MONGO_URL)
 
-  for (const child of locations) {
-    if (!child.partOf) continue
+export const resolveLocationChildren = async (id: UUID) => {
+  try {
+    const connectedClient = await client.connect()
+    const db = connectedClient.db()
 
-    const parentId = resourceIdentifierToUUID(child.partOf.reference)
-    const parentChildrenRelationship = parentChildrenMap.get(parentId)
+    const childQuery = [
+      {
+        $match: { id: id }
+      },
+      {
+        $graphLookup: {
+          from: 'Location_view_with_plain_ids',
+          startWith: '$id',
+          connectFromField: 'id',
+          connectToField: 'partOf.reference',
+          as: 'children'
+        }
+      }
+    ]
 
-    if (!parentChildrenRelationship) {
-      parentChildrenMap.set(parentId, [child])
-    } else {
-      parentChildrenRelationship.push(child)
-    }
+    const result = await db
+      .collection<Location>('Location_view_with_plain_ids')
+      .aggregate(childQuery)
+      .toArray()
+
+    return result.length ? result[0].children : []
+  } finally {
+    await client.close()
   }
-
-  return parentChildrenMap
-}
-/** Resolves any given location's children multi-level down to the leaf node */
-export const resolveLocationChildren = (
-  location: SavedLocation,
-  locations: SavedLocation[]
-) => {
-  const parentChildrenMap = resolveParentChildrenMap(locations)
-  const children: SavedLocation[] = []
-  const stack = parentChildrenMap.get(location.id) ?? []
-
-  while (stack.length) {
-    const child = stack.pop()!
-    children.push(child)
-    if (parentChildrenMap.get(child.id)) {
-      stack.push(...(parentChildrenMap.get(child.id) ?? []))
-    }
-  }
-
-  return children
 }
 
 /** Resolves any given location's parents multi-level up to the root node */
-export const resolveLocationParents = (
-  location: SavedLocation,
-  locations: SavedLocation[]
-): SavedLocation[] => {
-  const parent =
-    location.partOf &&
-    find(locations, {
-      id: resourceIdentifierToUUID(location.partOf.reference)
-    })
+export const resolveLocationParents = async (
+  locationId: UUID
+): Promise<SavedLocation[]> => {
+  const current = await fetchFromHearth<SavedLocation>(`Location/${locationId}`)
 
-  if (!parent) {
+  if (!current) {
     return []
   }
-  return [...resolveLocationParents(parent, locations), parent]
+
+  const id = current.partOf?.reference
+    ? resourceIdentifierToUUID(current.partOf.reference)
+    : null
+
+  // Handle case where top level location is Location/0
+  if (!id || id === '0') {
+    return [current]
+  }
+
+  const parents = await resolveLocationParents(id)
+
+  return [...parents, current]
 }

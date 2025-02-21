@@ -27,5 +27,6 @@ export const env = cleanEnv(process.env, {
   COUNTRY_CONFIG_URL: url({ devDefault: 'http://localhost:3040/' }),
   MONGO_URL: url({ devDefault: 'mongodb://localhost/application-config' }),
   USER_MANAGEMENT_URL: url({ devDefault: 'http://localhost:3030/' }),
-  FHIR_URL: url({ devDefault: 'http://localhost:3447/fhir' })
+  FHIR_URL: url({ devDefault: 'http://localhost:3447/fhir' }),
+  HEARTH_MONGO_URL: str({ default: 'mongodb://localhost/hearth-dev' })
 })

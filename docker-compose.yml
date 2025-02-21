@@ -256,6 +256,7 @@ services:
       - GATEWAY_URL=http://gateway:7070/
       - DOCUMENTS_URL=http://documents:9050
       - CHECK_INVALID_TOKEN=true
+      - HEARTH_MONGO_URL=mongodb://mongo1/hearth-dev
   migration:
     image: opencrvs/ocrvs-migration:${VERSION}
     #platform: linux/amd64

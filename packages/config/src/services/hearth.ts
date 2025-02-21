@@ -8,24 +8,8 @@
  *
  * Copyright (C) The OpenCRVS Authors located at https://github.com/opencrvs/opencrvs-core/blob/master/AUTHORS.
  */
-import { Location, SavedBundle } from '@opencrvs/commons/types'
 import { env } from '@config/environment'
 import { joinURL } from '@opencrvs/commons'
-
-export const fetchLocations = async () => {
-  const allLocationsUrl = joinURL(
-    env.FHIR_URL,
-    `Location?_count=0&status=active`
-  )
-  const response = await fetch(allLocationsUrl)
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch locations: ${await response.text()}`)
-  }
-
-  const bundle = (await response.json()) as SavedBundle<Location>
-  return bundle.entry.map(({ resource }) => resource)
-}
 
 export const fetchFromHearth = async <T = any>(
   suffix: string,
