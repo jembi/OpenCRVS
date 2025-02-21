@@ -27,6 +27,7 @@ import { Plus } from '@opencrvs/components/src/icons'
 import { ROUTES } from '@client/v2-events/routes'
 import { ProfileMenu } from '@client/components/ProfileMenu'
 import { useEventConfigurations } from '@client/v2-events/features/events/useEventConfiguration'
+import { constantsMessages } from '@client/v2-events/messages'
 
 /**
  * Basic frame for the workqueues. Includes the left navigation and the app bar.
@@ -97,7 +98,9 @@ export function WorkqueueLayout({ children }: { children: React.ReactNode }) {
           desktopRight={<ProfileMenu key="profileMenu" />}
         />
       }
-      skipToContentText="skip"
+      skipToContentText={intl.formatMessage(
+        constantsMessages.skipToMainContent
+      )}
     >
       {children}
     </Frame>
