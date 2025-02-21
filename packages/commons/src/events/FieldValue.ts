@@ -58,9 +58,7 @@ export const FileFieldWithOptionValue = z.array(FileFieldValueWithOption)
 export type FileFieldWithOptionValue = z.infer<typeof FileFieldWithOptionValue>
 
 export const CheckboxFieldValue = z.boolean()
-export type CheckboxFieldValue = z.infer<typeof CheckboxFieldValue>
 export const NumberFieldValue = z.number()
-export type NumberFieldValue = z.infer<typeof NumberFieldValue>
 
 export const FieldValue = z.union([
   TextValue,
