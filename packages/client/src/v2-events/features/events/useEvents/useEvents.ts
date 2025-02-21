@@ -169,6 +169,7 @@ export function useEvents() {
     deleteEvent: useDeleteEventMutation(),
     getOutbox,
     getDrafts,
+    search: api.event.search.useQuery,
     actions: {
       validate: useEventAction(
         utils.event.actions.validate,

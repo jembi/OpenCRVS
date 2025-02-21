@@ -16,4 +16,11 @@ export const EventIndex = EventMetadata.extend({
   data: z.record(z.string(), z.any())
 })
 
+export const EventSearchIndex = z.record(z.string(), z.any()).and(
+  z.object({
+    type: z.string() // Ensures "type" (event-id) exists and is a string
+  })
+)
+
+export type EventSearchIndex = z.infer<typeof EventSearchIndex>
 export type EventIndex = z.infer<typeof EventIndex>

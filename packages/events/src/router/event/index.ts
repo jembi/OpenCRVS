@@ -20,7 +20,7 @@ import {
   getEventById
 } from '@events/service/events/events'
 import { presignFilesInEvent } from '@events/service/files'
-import { getIndexedEvents } from '@events/service/indexing/indexing'
+import { getIndex, getIndexedEvents } from '@events/service/indexing/indexing'
 import {
   EventConfig,
   getUUID,
@@ -39,7 +39,8 @@ import {
   NotifyActionInput,
   RegisterActionInput,
   ValidateActionInput,
-  FieldValue
+  FieldValue,
+  EventSearchIndex
 } from '@opencrvs/commons/events'
 import { router, publicProcedure } from '@events/router/trpc'
 import { approveCorrection } from '@events/service/events/actions/approve-correction'
@@ -262,5 +263,10 @@ export const eventRouter = router({
         logger.info(input.data)
         return getEventById(input.eventId)
       })
-  })
+  }),
+  search: publicProcedure
+    .input(EventSearchIndex)
+    .query(async ({ input, ctx }) => {
+      return getIndex(input)
+    })
 })

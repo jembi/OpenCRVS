@@ -202,7 +202,7 @@ function runCustomFieldValidations({
  * e.g. email is proper format, date is a valid date, etc.
  * for custom validations @see runCustomFieldValidations
  */
-function validateFieldInput({
+export function validateFieldInput({
   field,
   value
 }: {
