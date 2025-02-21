@@ -35,7 +35,7 @@
     "jwt-decode": "^3.0.0",
     "lodash": "^4.17.21",
     "mongodb": "^4.17.1",
-    "mongoose": "^6.11.3",
+    "mongoose": "^8.0.0",
     "node-fetch": "^2.6.7",
     "pino": "^7.0.0",
     "tsconfig-paths": "^3.13.0",
