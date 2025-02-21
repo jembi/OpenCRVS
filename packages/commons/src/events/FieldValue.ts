@@ -28,20 +28,30 @@ export const FileFieldValue = z.object({
 
 export type FileFieldValue = z.infer<typeof FileFieldValue>
 
-export const AddressFieldValue = z
-  .object({
-    country: z.string(),
-    province: z.string(),
-    district: z.string(),
-    urbanOrRural: z.string(),
-    town: z.string(),
-    residentialArea: z.string(),
-    street: z.string(),
-    number: z.string(),
-    zipCode: z.string(),
-    village: z.string()
-  })
-  .partial()
+const AdminStructure = z.object({
+  country: z.string(),
+  province: z.string(),
+  district: z.string()
+})
+
+const UrbanAddress = AdminStructure.extend({
+  urbanOrRural: z.literal('URBAN'),
+  town: z.string().optional(),
+  residentialArea: z.string().optional(),
+  street: z.string().optional(),
+  number: z.string().optional(),
+  zipCode: z.string().optional()
+})
+
+const RuralAddress = AdminStructure.extend({
+  urbanOrRural: z.literal('RURAL'),
+  village: z.string().optional()
+})
+
+export const AddressFieldValue = z.discriminatedUnion('urbanOrRural', [
+  UrbanAddress,
+  RuralAddress
+])
 
 export type AddressFieldValue = z.infer<typeof AddressFieldValue>
 export const FileFieldValueWithOption = z.object({
@@ -68,8 +78,9 @@ export const FieldValue = z.union([
   FileFieldValue,
   FileFieldWithOptionValue,
   CheckboxFieldValue,
-  AddressFieldValue,
-  NumberFieldValue
+  NumberFieldValue,
+  UrbanAddress,
+  RuralAddress
 ])
 
 export type FieldValue = z.infer<typeof FieldValue>

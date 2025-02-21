@@ -22,6 +22,7 @@ import {
   Text,
   TextInput
 } from '@opencrvs/components'
+import { ActionType, findActiveActionForm } from '@opencrvs/commons/client'
 import { useEventConfiguration } from '@client/v2-events/features/events/useEventConfiguration'
 import { useEventFormData } from '@client/v2-events/features/events/useEventFormData'
 import { useEventMetadata } from '@client/v2-events/features/events/useEventMeta'
@@ -35,7 +36,7 @@ import { FormLayout } from '@client/v2-events/layouts/form'
 const messages = defineMessages({
   reviewActionTitle: {
     id: 'v2.reviewAction.title',
-    defaultMessage: 'Declare member',
+    defaultMessage: 'Declare event',
     description: 'The title for review action'
   },
   reviewActionDescription: {
@@ -112,9 +113,10 @@ export function Review() {
 
   const { eventConfiguration: config } = useEventConfiguration(event.type)
 
-  const { forms: formConfigs } = config.actions.filter(
-    (action) => action.type === 'DECLARE'
-  )[0]
+  const formConfig = findActiveActionForm(config, ActionType.DECLARE)
+  if (!formConfig) {
+    throw new Error('No active form configuration found for declare action')
+  }
 
   const form = useEventFormData((state) => state.formValues)
   const { setMetadata, getMetadata } = useEventMetadata()
@@ -201,13 +203,13 @@ export function Review() {
     >
       <ReviewComponent.Body
         eventConfig={config}
-        formConfig={formConfigs[0]}
+        formConfig={formConfig}
         // eslint-disable-next-line
         onEdit={handleEdit} // will be fixed on eslint-plugin-react, 7.19.0. Update separately.
         form={form}
         isUploadButtonVisible={true}
         // @todo: Update to use dynamic title
-        title={intl.formatMessage(formConfigs[0].review.title, {
+        title={intl.formatMessage(formConfig.review.title, {
           firstname: form['applicant.firstname'] as string,
           surname: form['applicant.surname'] as string
         })}
@@ -215,11 +217,14 @@ export function Review() {
         onMetadataChange={(values) => setMetadata(eventId, values)}
       >
         <ReviewComponent.Actions
+          form={form}
+          formConfig={formConfig}
           messages={{
             title: messages.reviewActionTitle,
             description: messages.reviewActionDescription,
             onConfirm: messages.reviewActionDeclare
           }}
+          metadata={metadata}
           onConfirm={handleDeclaration}
           onReject={handleReject}
         />

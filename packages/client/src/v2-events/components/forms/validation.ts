@@ -8,19 +8,22 @@
  *
  * Copyright (C) The OpenCRVS Authors located at https://github.com/opencrvs/opencrvs-core/blob/master/AUTHORS.
  */
+import { MessageDescriptor } from 'react-intl'
 import {
   FieldConfig,
   getFieldValidationErrors,
-  ActionFormData
+  ActionFormData,
+  FormConfig
 } from '@opencrvs/commons/client'
-import { IValidationResult } from '@client/utils/validate'
 
-interface IFieldErrors {
-  errors: IValidationResult[]
+interface FieldErrors {
+  errors: {
+    message: MessageDescriptor
+  }[]
 }
 
 export interface Errors {
-  [fieldName: string]: IFieldErrors
+  [fieldName: string]: FieldErrors
 }
 
 export function getValidationErrorsForForm(
@@ -28,22 +31,40 @@ export function getValidationErrorsForForm(
   values: ActionFormData,
   checkValidationErrorsOnly?: boolean
 ) {
-  return fields.reduce(
-    (errorsForAllFields: Errors, field) =>
+  return fields.reduce((errorsForAllFields: Errors, field) => {
+    if (
       // eslint-disable-next-line
       errorsForAllFields[field.id] &&
       errorsForAllFields[field.id].errors.length > 0
-        ? errorsForAllFields
-        : {
-            ...errorsForAllFields,
-            [field.id]: getFieldValidationErrors({
-              field: {
-                ...field,
-                required: field.required && !checkValidationErrorsOnly
-              },
-              values
-            })
-          },
-    {}
-  )
+    ) {
+      return errorsForAllFields
+    }
+
+    return {
+      ...errorsForAllFields,
+      [field.id]: getFieldValidationErrors({
+        field: {
+          ...field,
+          required: field.required && !checkValidationErrorsOnly
+        },
+        values
+      })
+    }
+  }, {})
+}
+
+export function validationErrorsInActionFormExist(
+  formConfig: FormConfig,
+  form: ActionFormData,
+  metadata?: ActionFormData
+): boolean {
+  const hasValidationErrors = formConfig.pages.some((page) => {
+    const fieldErrors = getValidationErrorsForForm(page.fields, form)
+    return Object.values(fieldErrors).some((field) => field.errors.length > 0)
+  })
+  const hasMetadataValidationErrors = Object.values(
+    getValidationErrorsForForm(formConfig.review.fields, metadata ?? {})
+  ).some((field) => field.errors.length > 0)
+
+  return hasValidationErrors || hasMetadataValidationErrors
 }

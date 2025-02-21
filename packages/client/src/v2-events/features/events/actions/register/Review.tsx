@@ -14,7 +14,11 @@ import { defineMessages } from 'react-intl'
 import { useNavigate } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
 import { useTypedParams } from 'react-router-typesafe-routes/dom'
-import { getCurrentEventState, ActionType } from '@opencrvs/commons/client'
+import {
+  getCurrentEventState,
+  ActionType,
+  findActiveActionForm
+} from '@opencrvs/commons/client'
 import { ROUTES } from '@client/v2-events/routes'
 import { useEvents } from '@client/v2-events/features/events/useEvents/useEvents'
 import { Review as ReviewComponent } from '@client/v2-events/features/events/components/Review'
@@ -65,9 +69,10 @@ export function Review() {
   )
   const { eventConfiguration: config } = useEventConfiguration(event.type)
 
-  const { forms: formConfigs } = config.actions.filter(
-    (action) => action.type === ActionType.REGISTER
-  )[0]
+  const formConfig = findActiveActionForm(config, ActionType.REGISTER)
+  if (!formConfig) {
+    throw new Error('No active form configuration found for declare action')
+  }
 
   const setFormValues = useEventFormData((state) => state.setFormValuesIfEmpty)
   const getFormValues = useEventFormData((state) => state.getFormValues)
@@ -141,7 +146,7 @@ export function Review() {
       <ReviewComponent.Body
         eventConfig={config}
         form={form}
-        formConfig={formConfigs[0]}
+        formConfig={formConfig}
         isUploadButtonVisible={true}
         metadata={metadata}
         previousFormValues={previousFormValues}
@@ -150,11 +155,14 @@ export function Review() {
         onMetadataChange={(values) => setMetadata(eventId, values)}
       >
         <ReviewComponent.Actions
+          form={form}
+          formConfig={formConfig}
           messages={{
             title: messages.registerActionTitle,
             description: messages.registerActionDescription,
             onConfirm: messages.registerActionDeclare
           }}
+          metadata={metadata}
           onConfirm={handleRegistration}
         />
         {modal}

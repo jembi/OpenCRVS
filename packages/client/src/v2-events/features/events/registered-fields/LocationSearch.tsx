@@ -14,9 +14,10 @@ import { useIntl } from 'react-intl'
 import { LocationSearch as LocationSearchComponent } from '@opencrvs/components'
 import { FieldProps } from '@opencrvs/commons/client'
 // eslint-disable-next-line no-restricted-imports
-import { getOfflineData } from '@client/offline/selectors'
+import { getLocations, getOfflineData } from '@client/offline/selectors'
 import { getListOfLocations } from '@client/utils/validate'
 import { generateLocations } from '@client/utils/locationUtils'
+import { Stringifiable } from '@client/v2-events/components/forms/utils'
 
 interface SearchLocation {
   id: string
@@ -70,7 +71,15 @@ function LocationSearchInput({
   )
 }
 
+function LocationSearchOutput({ value }: { value: Stringifiable }) {
+  const locations = useSelector(getLocations)
+
+  const location = value.toString() && locations[value.toString()]
+
+  return location ? location.name : ''
+}
+
 export const LocationSearch = {
   Input: LocationSearchInput,
-  Output: null
+  Output: LocationSearchOutput
 }

@@ -32,10 +32,7 @@ import {
 } from '@client/forms'
 import { EventType } from '@client/utils/gateway'
 import { getVisibleSectionGroupsBasedOnConditions } from '@client/forms/utils'
-import {
-  getValidationErrorsForForm,
-  IFieldErrors
-} from '@client/forms/validation'
+import { getValidationErrorsForForm } from '@client/forms/validation'
 import { buttonMessages } from '@client/i18n/messages'
 import { messages as certificateMessages } from '@client/i18n/messages/views/certificate'
 import {

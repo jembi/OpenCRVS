@@ -151,7 +151,7 @@ describe('events that have unsynced actions', () => {
 
     // Expect data store now to contain one event
     await waitFor(() => {
-      expect(getHook.result.current?.data).toBeTruthy()
+      expect(getHook.result.current.data).toBeTruthy()
     })
   })
 
@@ -177,7 +177,7 @@ describe('events that have unsynced actions', () => {
 
     // Expect data store now to contain one event
     await waitFor(() => {
-      expect(getHook.result.current?.data).toBeTruthy()
+      expect(getHook.result.current.data).toBeTruthy()
     })
   })
 })

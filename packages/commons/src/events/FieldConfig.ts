@@ -76,7 +76,7 @@ const TextField = BaseField.extend({
   configuration: z
     .object({
       maxLength: z.number().optional().describe('Maximum length of the text'),
-      type: z.enum(['text', 'email', 'password']).optional(),
+      type: z.enum(['text', 'password']).optional(),
       prefix: TranslationConfig.optional(),
       postfix: TranslationConfig.optional()
     })
@@ -137,6 +137,12 @@ export type SignatureField = z.infer<typeof SignatureField>
 
 export const EmailField = BaseField.extend({
   type: z.literal(FieldType.EMAIL),
+  configuration: z
+    .object({
+      maxLength: z.number().optional().describe('Maximum length of the text')
+    })
+    .default({ maxLength: 10 })
+    .optional(),
   defaultValue: z.union([RequiredTextValue, DependencyExpression]).optional()
 })
 

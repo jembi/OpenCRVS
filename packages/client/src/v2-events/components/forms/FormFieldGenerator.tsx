@@ -10,12 +10,12 @@
  */
 
 /* eslint-disable */
+import React, { useCallback } from 'react'
 import { InputField } from '@client/components/form/InputField'
 import { TEXT } from '@client/forms'
 import { Text as TextComponent } from '@opencrvs/components/lib/Text'
 import { TextArea } from '@opencrvs/components/lib/TextArea'
 import { SignatureUploader } from '@client/components/form/SignatureField/SignatureUploader'
-import React, { useEffect, useCallback } from 'react'
 
 import styled, { keyframes } from 'styled-components'
 import {
@@ -56,6 +56,7 @@ import {
   isSignatureFieldType,
   isTextAreaFieldType,
   isTextFieldType,
+  isEmailFieldType,
   isNumberFieldType
 } from '@opencrvs/commons/client'
 import {
@@ -259,6 +260,19 @@ const GeneratedInputField = React.memo(
       )
     }
 
+    if (isEmailFieldType(field)) {
+      return (
+        <InputField {...inputFieldProps}>
+          <Text.Input
+            type="email"
+            {...inputProps}
+            isDisabled={disabled}
+            maxLength={field.config.configuration?.maxLength}
+            value={field.value}
+          />
+        </InputField>
+      )
+    }
     if (isNumberFieldType(field)) {
       return (
         <InputField
@@ -330,6 +344,8 @@ const GeneratedInputField = React.memo(
         <InputField {...inputFieldProps}>
           <Address.Input
             value={field.value}
+            //@TODO: We need to come up with a general solution for complex types.
+            // @ts-ignore
             onChange={(val) => setFieldValue(fieldDefinition.id, val)}
             {...field.config}
           />
@@ -631,7 +647,7 @@ class FormSectionComponent extends React.Component<AllProps> {
 
           if (fieldErrors && fieldErrors.length > 0) {
             const [firstError] = fieldErrors
-            error = intl.formatMessage(firstError.message, firstError.props)
+            error = intl.formatMessage(firstError.message)
           }
 
           const formParams = {
@@ -667,7 +683,7 @@ class FormSectionComponent extends React.Component<AllProps> {
                       error={isDisabled ? '' : error}
                       fields={fields}
                       formData={formData}
-                      touched={touched[field.id] || false}
+                      touched={touched[field.id] ?? false}
                       values={values}
                       onUploadingStateChanged={
                         this.props.onUploadingStateChanged

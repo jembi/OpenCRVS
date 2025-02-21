@@ -14,6 +14,7 @@ import { createTRPCMsw, httpLink } from '@vafanassieff/msw-trpc'
 import React from 'react'
 import superjson from 'superjson'
 import { fireEvent, within } from '@storybook/test'
+import { AddressFieldValue } from '@opencrvs/commons/client'
 import {
   tennisClueMembershipEventDocument,
   tennisClubMembershipEvent,
@@ -32,12 +33,13 @@ const mockFormData = {
   'applicant.address': {
     country: 'FAR',
     province: 'a45b982a-5c7b-4bd9-8fd8-a42d0994054c',
+    district: '5ef450bc-712d-48ad-93f3-8da0fa453baa',
     street: '123 Tennis Club Avenue',
     number: '123',
     zipCode: 'Z12345',
-    urbanOrRural: 'RURAL',
+    urbanOrRural: 'URBAN' as const,
     town: 'Tennisville',
-    village: 'Tennisville'
+    residentialArea: 'Example Residential Area'
   }
 }
 
@@ -137,6 +139,8 @@ export const ReviewButtonTest: StoryObj<typeof Review.Body> = {
           onEdit={handleEdit}
         >
           <Review.Actions
+            form={mockFormData}
+            formConfig={DEFAULT_FORM}
             messages={{
               title: {
                 id: 'v2.changeModal.title',
@@ -159,6 +163,70 @@ export const ReviewButtonTest: StoryObj<typeof Review.Body> = {
         </Review.Body>
         {modal}
       </>
+    )
+  }
+}
+
+export const ReviewWithValidationErrors: Story = {
+  parameters: {
+    msw: {
+      handlers: {
+        event: [
+          tRPCMsw.event.get.query(() => {
+            return tennisClueMembershipEventDocument
+          })
+        ]
+      }
+    }
+  },
+  args: {
+    form: {
+      'applicant.firstname': 'Mia',
+      // @ts-ignore
+      'applicant.surname': undefined,
+      // @ts-ignore
+      'applicant.dob': undefined,
+      'applicant.email': 'mia@',
+      'applicant.address': {
+        country: 'FAR',
+        province: 'a45b982a-5c7b-4bd9-8fd8-a42d0994054c',
+        urbanOrRural: 'RURAL',
+        village: 'Tennisville'
+      } as AddressFieldValue
+    }
+  },
+  render: function Component() {
+    return (
+      <Review.Body
+        eventConfig={tennisClubMembershipEvent}
+        form={this.args?.form || {}}
+        formConfig={DEFAULT_FORM}
+        title="My test action"
+        onEdit={() => undefined}
+      >
+        <Review.Actions
+          form={this.args?.form || {}}
+          formConfig={DEFAULT_FORM}
+          messages={{
+            title: {
+              id: 'v2.changeModal.title',
+              defaultMessage: 'This is a title',
+              description: 'The title for review action'
+            },
+            description: {
+              id: 'v2.changeModal.description',
+              defaultMessage: 'This is a description',
+              description: 'The title for review action'
+            },
+            onConfirm: {
+              id: 'ourOnConfirm',
+              defaultMessage: 'Confirm test',
+              description: 'The title for review action'
+            }
+          }}
+          onConfirm={() => undefined}
+        />
+      </Review.Body>
     )
   }
 }

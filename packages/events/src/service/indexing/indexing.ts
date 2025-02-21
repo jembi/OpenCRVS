@@ -121,6 +121,14 @@ function decodeFieldId(fieldId: string) {
   return fieldId.replaceAll(SEPARATOR, '.')
 }
 
+type _Combine<
+  T,
+  K extends PropertyKey = T extends unknown ? keyof T : never
+> = T extends unknown ? T & Partial<Record<Exclude<K, keyof T>, never>> : never
+
+type Combine<T> = { [K in keyof _Combine<T>]: _Combine<T>[K] }
+type AllFieldsUnion = Combine<AddressFieldValue>
+
 function mapFieldTypeToElasticsearch(field: FieldConfig) {
   switch (field.type) {
     case FieldType.NUMBER:
@@ -160,9 +168,7 @@ function mapFieldTypeToElasticsearch(field: FieldConfig) {
         zipCode: { type: 'keyword' },
         village: { type: 'keyword' }
       } satisfies {
-        [K in keyof Required<
-          NonNullable<AddressFieldValue>
-        >]: estypes.MappingProperty
+        [K in keyof Required<AllFieldsUnion>]: estypes.MappingProperty
       }
       return {
         type: 'object',

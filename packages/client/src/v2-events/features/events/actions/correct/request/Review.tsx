@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom'
 import { useTypedParams } from 'react-router-typesafe-routes/dom'
 import {
   ActionType,
+  findActiveActionForm,
   getAllFields,
   getCurrentEventState
 } from '@opencrvs/commons/client'
@@ -40,12 +41,7 @@ export function Review() {
   const [event] = events.getEvent.useSuspenseQuery(eventId)
 
   const { eventConfiguration: config } = useEventConfiguration(event.type)
-
-  const { forms: formConfigs } = config.actions.filter(
-    (action) => action.type === ActionType.REQUEST_CORRECTION
-  )[0]
-
-  const formConfig = formConfigs.find((form) => form.active)
+  const formConfig = findActiveActionForm(config, ActionType.REQUEST_CORRECTION)
 
   if (!formConfig) {
     throw new Error(

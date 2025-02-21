@@ -12,37 +12,50 @@
 import React from 'react'
 import styled from 'styled-components'
 import {
+  ActionFormData,
   FieldConfig,
   FieldValue,
+  isAddressFieldType,
+  isAdministrativeAreaFieldType,
   isBulletListFieldType,
   isCheckboxFieldType,
   isCountryFieldType,
   isDateFieldType,
   isDividerFieldType,
+  isEmailFieldType,
+  isFacilityFieldType,
   isFileFieldType,
-  isAdministrativeAreaFieldType,
+  isNumberFieldType,
   isPageHeaderFieldType,
   isParagraphFieldType,
   isRadioGroupFieldType,
   isSelectFieldType,
-  isAddressFieldType,
-  isTextFieldType,
-  isNumberFieldType
+  isTextFieldType
 } from '@opencrvs/commons/client'
 
 import { Stringifiable } from '@client/v2-events/components/forms/utils'
 import {
   Address,
+  AdministrativeArea,
   Checkbox,
+  Date as DateField,
+  LocationSearch,
   RadioGroup,
   Select,
-  AdministrativeArea,
-  SelectCountry,
-  Date as DateField
+  SelectCountry
 } from '@client/v2-events/features/events/registered-fields'
 
 const Deleted = styled.del`
   color: ${({ theme }) => theme.colors.negative};
+`
+export const ValidationError = styled.span`
+  color: ${({ theme }) => theme.colors.negative};
+  display: inline-block;
+  text-transform: lowercase;
+
+  &::first-letter {
+    text-transform: uppercase;
+  }
 `
 
 interface FieldWithValue {
@@ -97,6 +110,10 @@ function ValueOutput(field: FieldWithValue) {
     return <Checkbox.Output value={field.value} />
   }
 
+  if (isEmailFieldType(field)) {
+    return <DefaultOutput value={field.value} />
+  }
+
   if (isAddressFieldType(field)) {
     return <Address.Output value={field.value} />
   }
@@ -114,6 +131,10 @@ function ValueOutput(field: FieldWithValue) {
   if (isDividerFieldType(field)) {
     return <DefaultOutput value={field.value} />
   }
+
+  if (isFacilityFieldType(field)) {
+    return <LocationSearch.Output value={field.value} />
+  }
 }
 
 function DefaultOutput<T extends Stringifiable>({ value }: { value?: T }) {
@@ -121,19 +142,17 @@ function DefaultOutput<T extends Stringifiable>({ value }: { value?: T }) {
 }
 
 function getEmptyValueForFieldType(field: FieldWithValue) {
-  if (isAddressFieldType(field)) {
-    return {}
-  }
-
   return '-'
 }
 
 export function Output({
+  form,
   field,
   value,
   previousValue,
   showPreviouslyMissingValuesAsChanged = true
 }: {
+  form: ActionFormData
   field: FieldConfig
   value?: FieldValue
   previousValue?: FieldValue

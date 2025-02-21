@@ -14,6 +14,8 @@ import {
   FieldConfig,
   FieldValue,
   isAddressFieldType,
+  isAdministrativeAreaFieldType,
+  isFacilityFieldType,
   isLocationFieldType,
   isRadioGroupFieldType
 } from '@opencrvs/commons/client'
@@ -30,7 +32,12 @@ function useFieldStringifier() {
 
   return (fieldConfig: FieldConfig, value: FieldValue) => {
     const field = { config: fieldConfig, value }
-    if (isLocationFieldType(field)) {
+    if (
+      isLocationFieldType(field) ||
+      isAdministrativeAreaFieldType(field) ||
+      isFacilityFieldType(field)
+    ) {
+      // Since all of the above field types are actually locations
       return stringifyLocation(field.value)
     }
 
